@@ -1,0 +1,74 @@
+/**
+ * Stadium overview summary — total occupancy, active alerts, average wait.
+ */
+
+import Card from "@/components/ui/Card";
+import type { StadiumApiResponse } from "@/lib/types";
+
+interface StadiumOverviewProps {
+  readonly data: StadiumApiResponse;
+}
+
+interface StatItem {
+  readonly label: string;
+  readonly value: string;
+  readonly subtext: string;
+  readonly colorClass: string;
+}
+
+export default function StadiumOverview({ data }: StadiumOverviewProps) {
+  const criticalZones = data.crowdReport.filter(
+    (z) => z.densityLevel === "critical"
+  ).length;
+
+  const highZones = data.crowdReport.filter(
+    (z) => z.densityLevel === "high"
+  ).length;
+
+  const activeIncidents = data.stadiumState.incidents.filter(
+    (inc) => inc.status !== "resolved"
+  ).length;
+
+  const stats: readonly StatItem[] = [
+    {
+      label: "Total Occupancy",
+      value: data.totalOccupancy.toLocaleString(),
+      subtext: `of ${data.totalCapacity.toLocaleString()} · ${String(data.occupancyPercent)}%`,
+      colorClass: data.occupancyPercent >= 85 ? "text-orange-400" : "text-emerald-400",
+    },
+    {
+      label: "Critical Zones",
+      value: String(criticalZones),
+      subtext: `${String(highZones)} high density`,
+      colorClass: criticalZones > 0 ? "text-red-400" : "text-emerald-400",
+    },
+    {
+      label: "Active Incidents",
+      value: String(activeIncidents),
+      subtext: `of ${String(data.stadiumState.incidents.length)} total`,
+      colorClass: activeIncidents > 3 ? "text-orange-400" : "text-sky-400",
+    },
+    {
+      label: "Match Phase",
+      value: data.stadiumState.matchPhase.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+      subtext: "Current status",
+      colorClass: "text-indigo-400",
+    },
+  ];
+
+  return (
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      {stats.map((stat) => (
+        <Card key={stat.label} as="article">
+          <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+            {stat.label}
+          </p>
+          <p className={`mt-1 text-2xl font-bold ${stat.colorClass}`}>
+            {stat.value}
+          </p>
+          <p className="mt-0.5 text-xs text-slate-500">{stat.subtext}</p>
+        </Card>
+      ))}
+    </div>
+  );
+}
