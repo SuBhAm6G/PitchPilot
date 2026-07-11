@@ -4,6 +4,8 @@
 
 import Card from "@/components/ui/Card";
 import type { StadiumApiResponse } from "@/lib/types";
+import { UI_WARNING_THRESHOLDS } from "@/lib/utils/constants";
+import { formatMatchPhase } from "@/lib/utils/formatters";
 
 interface StadiumOverviewProps {
   readonly data: StadiumApiResponse;
@@ -34,7 +36,7 @@ export default function StadiumOverview({ data }: StadiumOverviewProps) {
       label: "Total Occupancy",
       value: data.totalOccupancy.toLocaleString(),
       subtext: `of ${data.totalCapacity.toLocaleString()} · ${String(data.occupancyPercent)}%`,
-      colorClass: data.occupancyPercent >= 85 ? "text-orange-400" : "text-emerald-400",
+      colorClass: data.occupancyPercent >= UI_WARNING_THRESHOLDS.OCCUPANCY_PERCENT ? "text-orange-400" : "text-emerald-400",
     },
     {
       label: "Critical Zones",
@@ -46,11 +48,11 @@ export default function StadiumOverview({ data }: StadiumOverviewProps) {
       label: "Active Incidents",
       value: String(activeIncidents),
       subtext: `of ${String(data.stadiumState.incidents.length)} total`,
-      colorClass: activeIncidents > 3 ? "text-orange-400" : "text-sky-400",
+      colorClass: activeIncidents > UI_WARNING_THRESHOLDS.ACTIVE_INCIDENTS ? "text-orange-400" : "text-sky-400",
     },
     {
       label: "Match Phase",
-      value: data.stadiumState.matchPhase.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+      value: formatMatchPhase(data.stadiumState.matchPhase),
       subtext: "Current status",
       colorClass: "text-indigo-400",
     },

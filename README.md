@@ -52,7 +52,7 @@ This prevents malformed LLM outputs, injection attacks, and type inconsistencies
 
 ## How the Solution Works
 
-| Prompt Requirement | Feature Implementation |
+| Problem Statement Requirement | Feature Implementation |
 |---|---|
 | "GenAI-powered solution / dynamic assistant" | Real-time chat interface (`ChatPanel.tsx`) connecting to Google Gemini via server-side API route (`/api/chat`) |
 | "Logical decision making based on user context" | `contextDecisionEngine.ts` — pure function producing personalized recommendations based on role, zone, match phase, and accessibility |

@@ -128,3 +128,9 @@ export const CHAT_CONFIG = {
   MAX_HISTORY_LENGTH: 50,
   SYSTEM_PROMPT_ROLE: "Stadium AI Assistant for FIFA World Cup 2026 at MetLife Stadium",
 } as const;
+
+/** Thresholds for UI warnings */
+export const UI_WARNING_THRESHOLDS = {
+  OCCUPANCY_PERCENT: 85,
+  ACTIVE_INCIDENTS: 3,
+} as const;

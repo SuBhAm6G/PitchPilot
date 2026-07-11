@@ -19,7 +19,7 @@ const DENSITY_COLORS: Record<string, string> = {
 
 const DENSITY_BADGE: Record<string, "low" | "medium" | "high" | "critical"> = {
   low: "low",
-  moderate: "info" as "low",
+  moderate: "medium",
   high: "high",
   critical: "critical",
 };
