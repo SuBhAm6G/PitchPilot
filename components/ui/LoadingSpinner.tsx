@@ -7,11 +7,11 @@ interface LoadingSpinnerProps {
   readonly label?: string;
 }
 
-const SIZE_CLASSES = {
+const SIZE_CLASSES: Record<string, string> = {
   sm: "h-5 w-5 border-2",
   md: "h-8 w-8 border-[3px]",
   lg: "h-12 w-12 border-4",
-} as const;
+};
 
 export default function LoadingSpinner({
   size = "md",

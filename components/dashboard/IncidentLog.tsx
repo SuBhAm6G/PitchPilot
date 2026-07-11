@@ -6,15 +6,18 @@ import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import type { Incident } from "@/lib/types";
 import { prioritizeIncidents, getSeverityLabel, getStatusLabel } from "@/lib/engine/incidentEngine";
+import { INCIDENT_SEVERITY } from "@/lib/utils/constants";
+import { UI_LIMITS } from "@/lib/utils/constants";
+import { formatTime } from "@/lib/utils/formatters";
 
 interface IncidentLogProps {
   readonly incidents: readonly Incident[];
 }
 
 function severityVariant(severity: number): "low" | "medium" | "high" | "critical" {
-  if (severity >= 4) return "critical";
-  if (severity >= 3) return "high";
-  if (severity >= 2) return "medium";
+  if (severity >= INCIDENT_SEVERITY.CRITICAL) return "critical";
+  if (severity >= INCIDENT_SEVERITY.HIGH) return "high";
+  if (severity >= INCIDENT_SEVERITY.MEDIUM) return "medium";
   return "low";
 }
 
@@ -22,11 +25,6 @@ function statusVariant(status: string): "low" | "info" | "success" {
   if (status === "resolved") return "success";
   if (status === "in_progress") return "info";
   return "low";
-}
-
-function formatTime(isoString: string): string {
-  const date = new Date(isoString);
-  return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
 }
 
 export default function IncidentLog({ incidents }: IncidentLogProps) {
@@ -40,11 +38,11 @@ export default function IncidentLog({ incidents }: IncidentLogProps) {
         </h2>
         <Badge
           label={`${String(incidents.filter((i) => i.status !== "resolved").length)} active`}
-          variant={incidents.some((i) => i.severity >= 4) ? "critical" : "info"}
+          variant={incidents.some((i) => i.severity >= INCIDENT_SEVERITY.CRITICAL) ? "critical" : "info"}
         />
       </div>
 
-      {sorted.length === 0 ? (
+      {sorted.length === UI_LIMITS.EMPTY_COUNT ? (
         <p className="py-8 text-center text-sm text-slate-600">No incidents reported</p>
       ) : (
         <div className="overflow-x-auto">

@@ -4,7 +4,8 @@
 
 import Card from "@/components/ui/Card";
 import type { Venue } from "@/lib/types";
-import { VENUE_TYPES } from "@/lib/utils/constants";
+import { VENUE_TYPES, WAIT_TIME_THRESHOLDS } from "@/lib/utils/constants";
+import type { VenueType } from "@/lib/utils/constants";
 
 interface WaitTimeDisplayProps {
   readonly venues: readonly Venue[];
@@ -20,14 +21,14 @@ const TYPE_META: Record<string, { label: string; emoji: string }> = {
 };
 
 function getWaitColor(minutes: number): string {
-  if (minutes <= 5) return "text-emerald-400";
-  if (minutes <= 10) return "text-amber-400";
-  if (minutes <= 20) return "text-orange-400";
+  if (minutes <= WAIT_TIME_THRESHOLDS.SHORT) return "text-emerald-400";
+  if (minutes <= WAIT_TIME_THRESHOLDS.MODERATE) return "text-amber-400";
+  if (minutes <= WAIT_TIME_THRESHOLDS.LONG) return "text-orange-400";
   return "text-red-400";
 }
 
 export default function WaitTimeDisplay({ venues, userZone }: WaitTimeDisplayProps) {
-  const primaryTypes = [VENUE_TYPES.FOOD_COURT, VENUE_TYPES.RESTROOM, VENUE_TYPES.MERCHANDISE] as const;
+  const primaryTypes: VenueType[] = [VENUE_TYPES.FOOD_COURT, VENUE_TYPES.RESTROOM, VENUE_TYPES.MERCHANDISE];
 
   return (
     <Card as="section">

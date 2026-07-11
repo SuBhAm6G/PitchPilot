@@ -8,6 +8,8 @@ interface BadgeProps {
   readonly className?: string;
 }
 
+export type BadgeVariant = BadgeProps["variant"];
+
 const VARIANT_STYLES: Record<BadgeProps["variant"], string> = {
   low: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
   medium: "bg-amber-500/20 text-amber-300 border-amber-500/30",

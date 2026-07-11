@@ -5,18 +5,19 @@
 import Card from "@/components/ui/Card";
 import ProgressBar from "@/components/ui/ProgressBar";
 import Badge from "@/components/ui/Badge";
+import type { BadgeVariant } from "@/components/ui/Badge";
 import type { CrowdDensityReport } from "@/lib/types";
 
 interface CrowdDensityCardProps {
   readonly crowdReport: readonly CrowdDensityReport[];
 }
 
-const DENSITY_BADGE_VARIANT = {
+const DENSITY_BADGE_VARIANT: Record<string, BadgeVariant> = {
   low: "low",
   moderate: "info",
   high: "high",
   critical: "critical",
-} as const;
+};
 
 export default function CrowdDensityCard({ crowdReport }: CrowdDensityCardProps) {
   const sortedReport = [...crowdReport].sort(
@@ -43,7 +44,7 @@ export default function CrowdDensityCard({ crowdReport }: CrowdDensityCardProps)
               </span>
               <Badge
                 label={zone.densityLevel}
-                variant={DENSITY_BADGE_VARIANT[zone.densityLevel]}
+                variant={DENSITY_BADGE_VARIANT[zone.densityLevel] ?? "low"}
               />
             </div>
             <ProgressBar

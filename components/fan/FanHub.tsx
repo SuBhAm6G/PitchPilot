@@ -10,6 +10,7 @@ import WaitTimeDisplay from "@/components/fan/WaitTimeDisplay";
 import QuickActions from "@/components/fan/QuickActions";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import type { ContextRecommendation, StadiumApiResponse } from "@/lib/types";
+import { UI_LIMITS } from "@/lib/utils/constants";
 
 interface FanHubProps {
   readonly data: StadiumApiResponse | null;
@@ -72,7 +73,7 @@ export default function FanHub({
           {recommendations.map((rec) => (
             <RecommendationCard key={rec.id} recommendation={rec} />
           ))}
-          {recommendations.length === 0 && (
+          {recommendations.length === UI_LIMITS.EMPTY_COUNT && (
             <p className="col-span-2 py-8 text-center text-sm text-slate-600">
               No recommendations available. Try changing your zone or role.
             </p>

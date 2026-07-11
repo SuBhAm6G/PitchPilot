@@ -134,3 +134,20 @@ export const UI_WARNING_THRESHOLDS = {
   OCCUPANCY_PERCENT: 85,
   ACTIVE_INCIDENTS: 3,
 } as const;
+
+/** Progress bar color thresholds (percentage) */
+export const PROGRESS_THRESHOLDS = {
+  CRITICAL: 95,
+  HIGH: 85,
+  MEDIUM: 65,
+} as const;
+
+/** Chat constraints */
+export const CHAT_CONSTRAINTS = {
+  EMPTY_LENGTH: 0,
+} as const;
+
+/** General UI limits */
+export const UI_LIMITS = {
+  EMPTY_COUNT: 0,
+} as const;

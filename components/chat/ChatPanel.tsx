@@ -64,7 +64,7 @@ export default function ChatPanel({ userProfile, stadiumState, initialMessage }:
         throw new Error(`HTTP ${String(response.status)}`);
       }
 
-      const data = (await response.json()) as { reply?: string; error?: string };
+      const data: { reply?: string; error?: string } = await response.json();
 
       const assistantMessage: ChatMessage = {
         id: `assistant-${Date.now().toString()}`,

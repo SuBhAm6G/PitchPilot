@@ -6,7 +6,7 @@
 "use client";
 
 import { useState } from "react";
-import { CHAT_CONFIG } from "@/lib/utils/constants";
+import { CHAT_CONFIG, CHAT_CONSTRAINTS } from "@/lib/utils/constants";
 
 interface ChatInputProps {
   readonly onSend: (message: string) => void;
@@ -18,7 +18,7 @@ export default function ChatInput({ onSend, isLoading }: ChatInputProps) {
 
   function handleSubmit() {
     const trimmed = input.trim();
-    if (trimmed.length === 0 || isLoading) return;
+    if (trimmed.length === CHAT_CONSTRAINTS.EMPTY_LENGTH || isLoading) return;
     onSend(trimmed);
     setInput("");
   }
@@ -50,9 +50,9 @@ export default function ChatInput({ onSend, isLoading }: ChatInputProps) {
       <button
         type="button"
         onClick={handleSubmit}
-        disabled={isLoading || input.trim().length === 0}
+        disabled={isLoading || input.trim().length === CHAT_CONSTRAINTS.EMPTY_LENGTH}
         aria-label="Send message"
-        className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500 text-white transition-all duration-200 hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500/50 disabled:opacity-50 disabled:hover:bg-sky-500"
+        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 text-white shadow-lg transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:hover:scale-100"
       >
         {isLoading ? (
           <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" aria-hidden="true" />

@@ -13,3 +13,11 @@ export function formatMatchPhase(phase: MatchPhase | string): string {
     .replace(/_/g, " ")
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
+
+/**
+ * Formats an ISO date string into a localized time string (HH:MM).
+ */
+export function formatTime(isoString: string): string {
+  const date = new Date(isoString);
+  return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+}

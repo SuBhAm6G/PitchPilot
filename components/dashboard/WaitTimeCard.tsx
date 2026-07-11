@@ -5,7 +5,7 @@
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import type { Venue } from "@/lib/types";
-import { VENUE_TYPES } from "@/lib/utils/constants";
+import { VENUE_TYPES, WAIT_TIME_THRESHOLDS } from "@/lib/utils/constants";
 import type { VenueType } from "@/lib/utils/constants";
 
 interface WaitTimeCardProps {
@@ -21,9 +21,9 @@ const VENUE_LABELS: Record<VenueType, { label: string; emoji: string }> = {
 };
 
 function getWaitVariant(minutes: number): "low" | "medium" | "high" | "critical" {
-  if (minutes <= 5) return "low";
-  if (minutes <= 10) return "medium";
-  if (minutes <= 20) return "high";
+  if (minutes <= WAIT_TIME_THRESHOLDS.SHORT) return "low";
+  if (minutes <= WAIT_TIME_THRESHOLDS.MODERATE) return "medium";
+  if (minutes <= WAIT_TIME_THRESHOLDS.LONG) return "high";
   return "critical";
 }
 

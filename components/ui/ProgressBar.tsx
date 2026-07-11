@@ -1,6 +1,7 @@
 /**
  * Accessible progress bar with label and percentage display.
  */
+import { PROGRESS_THRESHOLDS } from "@/lib/utils/constants";
 
 interface ProgressBarProps {
   readonly value: number;
@@ -11,9 +12,9 @@ interface ProgressBarProps {
 }
 
 function getColorClass(percentage: number): string {
-  if (percentage >= 95) return "bg-red-500";
-  if (percentage >= 85) return "bg-orange-500";
-  if (percentage >= 65) return "bg-amber-500";
+  if (percentage >= PROGRESS_THRESHOLDS.CRITICAL) return "bg-red-500";
+  if (percentage >= PROGRESS_THRESHOLDS.HIGH) return "bg-orange-500";
+  if (percentage >= PROGRESS_THRESHOLDS.MEDIUM) return "bg-amber-500";
   return "bg-emerald-500";
 }
 
