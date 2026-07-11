@@ -49,12 +49,20 @@ export async function POST(request: Request): Promise<NextResponse<ChatResponse 
 
     const systemPrompt = buildSystemPrompt(userProfile.role, stadiumState.matchPhase, contextRecs);
 
-    const result = await model.generateContent([
-      { text: systemPrompt },
-      { text: message },
-    ]);
-
-    const responseText = result.response.text();
+    let responseText = "";
+    try {
+      const result = await model.generateContent([
+        { text: systemPrompt },
+        { text: message },
+      ]);
+      responseText = result.response.text();
+    } catch (llmError) {
+      console.warn("LLM generation failed, using fallback:", llmError);
+      return NextResponse.json({
+        reply: generateFallbackReply(message, contextRecs),
+        recommendations: contextRecs.slice(0, 3),
+      });
+    }
 
     // Attempt to parse structured JSON from LLM
     const structuredResponse = tryParseLLMResponse(responseText);
