@@ -36,17 +36,7 @@ export default function ChatPanel({ userProfile, stadiumState, initialMessage }:
     scrollToBottom();
   }, [messages, scrollToBottom]);
 
-  const initialSentRef = useRef(false);
-
-  // Handle initial message from quick actions
-  useEffect(() => {
-    if (initialMessage && !initialSentRef.current) {
-      initialSentRef.current = true;
-      void handleSend(initialMessage);
-    }
-  }, [initialMessage, stadiumState]);
-
-  async function handleSend(content: string) {
+  const handleSend = useCallback(async (content: string) => {
     if (!stadiumState) return;
 
     const userMessage: ChatMessage = {
@@ -96,7 +86,17 @@ export default function ChatPanel({ userProfile, stadiumState, initialMessage }:
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [stadiumState, userProfile]);
+
+  const initialSentRef = useRef(false);
+
+  // Handle initial message from quick actions
+  useEffect(() => {
+    if (initialMessage && !initialSentRef.current) {
+      initialSentRef.current = true;
+      void handleSend(initialMessage);
+    }
+  }, [initialMessage, stadiumState, handleSend]);
 
   return (
     <section

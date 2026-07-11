@@ -44,24 +44,21 @@ function makeRecommendation(
 
 export function getPersonalizedRecommendations(
   profile: UserProfile,
-  stadiumState: StadiumState,
-  currentTime: Date
+  stadiumState: StadiumState
 ): readonly ContextRecommendation[] {
   recommendationCounter = 0;
-  const recommendations: ContextRecommendation[] = [];
+  let recommendations: ContextRecommendation[] = [];
 
   // Phase-based recommendations (universal)
   recommendations.push(...getPhaseRecommendations(stadiumState.matchPhase));
 
   // Role-specific recommendations
   if (profile.role === USER_ROLES.FAN) {
-    recommendations.push(
-      ...getFanRecommendations(profile, stadiumState, currentTime)
+    recommendations = recommendations.concat(
+      getFanRecommendations(profile, stadiumState)
     );
-  } else {
-    recommendations.push(
-      ...getStaffRecommendations(profile, stadiumState)
-    );
+  } else if (profile.role === USER_ROLES.STAFF) {
+    recommendations.push(...getStaffRecommendations(profile, stadiumState));
   }
 
   // Accessibility recommendations
@@ -123,8 +120,7 @@ function getPhaseRecommendations(
 
 function getFanRecommendations(
   profile: UserProfile,
-  state: StadiumState,
-  _currentTime: Date
+  state: StadiumState
 ): readonly ContextRecommendation[] {
   const results: ContextRecommendation[] = [];
   const userZone = state.zones.find((z) => z.id === profile.currentZone);

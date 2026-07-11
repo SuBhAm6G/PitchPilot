@@ -29,8 +29,7 @@ export async function POST(request: Request): Promise<NextResponse<ChatResponse 
     // Get context-aware recommendations from the deterministic engine
     const contextRecs = getPersonalizedRecommendations(
       userProfile,
-      stadiumState,
-      new Date()
+      stadiumState
     );
 
     const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;

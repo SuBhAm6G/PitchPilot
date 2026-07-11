@@ -67,7 +67,7 @@ describe("getPersonalizedRecommendations", () => {
   it("should return recommendations sorted by priority (highest first)", () => {
     const profile = createFanProfile();
     const state = generateStadiumState(MATCH_PHASES.HALF_TIME, 42);
-    const recs = getPersonalizedRecommendations(profile, state, new Date());
+    const recs = getPersonalizedRecommendations(profile, state);
 
     for (let i = 0; i < recs.length - 1; i++) {
       const current = recs[i];
@@ -82,13 +82,11 @@ describe("getPersonalizedRecommendations", () => {
     const state = createStadiumStateWithIncidents();
     const fanRecs = getPersonalizedRecommendations(
       createFanProfile(),
-      state,
-      new Date()
+      state
     );
     const staffRecs = getPersonalizedRecommendations(
       createStaffProfile(),
-      state,
-      new Date()
+      state
     );
 
     // Fan should get food/restroom recs
@@ -110,8 +108,7 @@ describe("getPersonalizedRecommendations", () => {
     const preMatchState = generateStadiumState(MATCH_PHASES.PRE_MATCH, 42);
     const preMatchRecs = getPersonalizedRecommendations(
       profile,
-      preMatchState,
-      new Date()
+      preMatchState
     );
     const hasNavigationRec = preMatchRecs.some((r) => r.type === "navigation");
     expect(hasNavigationRec).toBe(true);
@@ -119,8 +116,7 @@ describe("getPersonalizedRecommendations", () => {
     const halfTimeState = generateStadiumState(MATCH_PHASES.HALF_TIME, 42);
     const halfTimeRecs = getPersonalizedRecommendations(
       profile,
-      halfTimeState,
-      new Date()
+      halfTimeState
     );
     const hasFoodRec = halfTimeRecs.some(
       (r) => r.type === "food" && r.title.includes("Half-Time")
@@ -131,7 +127,7 @@ describe("getPersonalizedRecommendations", () => {
   it("should include accessibility recommendations when user has needs", () => {
     const profile = createAccessibleFanProfile();
     const state = generateStadiumState(MATCH_PHASES.FIRST_HALF, 42);
-    const recs = getPersonalizedRecommendations(profile, state, new Date());
+    const recs = getPersonalizedRecommendations(profile, state);
 
     const accessibilityRecs = recs.filter((r) => r.type === "accessibility");
     expect(accessibilityRecs.length).toBeGreaterThanOrEqual(2);
@@ -149,7 +145,7 @@ describe("getPersonalizedRecommendations", () => {
   it("should NOT include accessibility recs when user has no needs", () => {
     const profile = createFanProfile();
     const state = generateStadiumState(MATCH_PHASES.FIRST_HALF, 42);
-    const recs = getPersonalizedRecommendations(profile, state, new Date());
+    const recs = getPersonalizedRecommendations(profile, state);
 
     const accessibilityRecs = recs.filter((r) => r.type === "accessibility");
     expect(accessibilityRecs.length).toBe(0);
@@ -158,7 +154,7 @@ describe("getPersonalizedRecommendations", () => {
   it("should return at least one recommendation for any valid input", () => {
     const profile = createFanProfile();
     const state = generateStadiumState(MATCH_PHASES.FIRST_HALF, 42);
-    const recs = getPersonalizedRecommendations(profile, state, new Date());
+    const recs = getPersonalizedRecommendations(profile, state);
 
     expect(recs.length).toBeGreaterThan(0);
   });
@@ -172,7 +168,7 @@ describe("getPersonalizedRecommendations", () => {
       matchPhase: MATCH_PHASES.FIRST_HALF,
       lastUpdated: new Date().toISOString(),
     };
-    const recs = getPersonalizedRecommendations(profile, emptyState, new Date());
+    const recs = getPersonalizedRecommendations(profile, emptyState);
 
     // Should still have at least the phase recommendation
     expect(recs.length).toBeGreaterThan(0);
@@ -181,7 +177,7 @@ describe("getPersonalizedRecommendations", () => {
   it("should assign unique IDs to all recommendations", () => {
     const profile = createFanProfile();
     const state = createStadiumStateWithIncidents();
-    const recs = getPersonalizedRecommendations(profile, state, new Date());
+    const recs = getPersonalizedRecommendations(profile, state);
 
     const ids = recs.map((r) => r.id);
     const uniqueIds = new Set(ids);

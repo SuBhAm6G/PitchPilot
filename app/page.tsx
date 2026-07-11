@@ -55,8 +55,7 @@ export default function HomePage() {
       // Run context engine with fresh data
       const recs = getPersonalizedRecommendations(
         buildUserProfile(role, zone),
-        data.stadiumState,
-        new Date()
+        data.stadiumState
       );
       setRecommendations(recs);
     } catch (error) {
@@ -68,9 +67,18 @@ export default function HomePage() {
 
   // Initial fetch + 30s polling
   useEffect(() => {
-    void fetchStadiumData();
-    const interval = setInterval(() => void fetchStadiumData(), 30_000);
-    return () => clearInterval(interval);
+    const loadData = () => {
+      fetchStadiumData().catch(console.error);
+    };
+    
+    // Defer initial execution to avoid synchronous setState inside effect body
+    const timeoutId = setTimeout(loadData, 0);
+    const intervalId = setInterval(loadData, 30_000);
+    
+    return () => {
+      clearTimeout(timeoutId);
+      clearInterval(intervalId);
+    };
   }, [fetchStadiumData]);
 
   function handleChatAction(message: string) {
