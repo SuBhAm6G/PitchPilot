@@ -96,17 +96,22 @@ export default function HomePage() {
 
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           {view === "dashboard" && (
-            <OpsDashboard data={stadiumData} isLoading={isLoading} selectedZone={zone} />
+            <OpsDashboard
+              data={stadiumData}
+              isLoading={isLoading}
+              userProfile={userProfile}
+              selectedZone={zone}
+            />
           )}
 
           {view === "fan" && (
             <FanHub
-              data={stadiumData}
-              recommendations={recommendations}
-              isLoading={isLoading}
-              userZone={zone}
-              onChatAction={handleChatAction}
-            />
+                data={stadiumData}
+                recommendations={recommendations}
+                isLoading={isLoading}
+                userProfile={userProfile}
+                onChatAction={handleChatAction}
+              />
           )}
 
           {view === "chat" && (

@@ -75,6 +75,84 @@ const recommendationPrioritySchema = z.union([
   z.literal(4),
 ]);
 
+// ─── New Feature Schemas ─────────────────────────────────────────────────────
+
+export const matchEventTypeSchema = z.enum([
+  "goal",
+  "yellow_card",
+  "red_card",
+  "substitution",
+  "var_review",
+  "penalty",
+  "half_time",
+  "full_time",
+]);
+
+export const matchEventSchema = z.object({
+  id: z.string(),
+  minute: z.number().int().nonnegative(),
+  type: matchEventTypeSchema,
+  team: z.enum(["home", "away"]),
+  playerName: z.string(),
+  description: z.string(),
+});
+
+export const matchStateSchema = z.object({
+  homeTeam: z.string(),
+  awayTeam: z.string(),
+  homeScore: z.number().int().nonnegative(),
+  awayScore: z.number().int().nonnegative(),
+  currentMinute: z.number().int().nonnegative(),
+  events: z.array(matchEventSchema),
+});
+
+export const navigationStepSchema = z.object({
+  instruction: z.string(),
+  distanceMeters: z.number().nonnegative(),
+  estimatedSeconds: z.number().nonnegative(),
+  landmark: z.string(),
+});
+
+export const navigationRouteSchema = z.object({
+  from: z.string(),
+  to: z.string(),
+  steps: z.array(navigationStepSchema),
+  totalDistanceMeters: z.number().nonnegative(),
+  totalEstimatedMinutes: z.number().nonnegative(),
+  isAccessible: z.boolean(),
+});
+
+export const emergencyRouteSchema = z.object({
+  userZone: z.string(),
+  nearestExit: z.string(),
+  avoidZones: z.array(z.string()),
+  instructions: z.array(z.string()),
+  estimatedEvacMinutes: z.number().nonnegative(),
+});
+
+export const itineraryItemSchema = z.object({
+  id: z.string(),
+  time: z.string(),
+  action: z.string(),
+  reason: z.string(),
+  priority: z.enum(["now", "soon", "later"]),
+  icon: z.string(),
+});
+
+export const weatherAdvisorySchema = z.object({
+  condition: z.enum(["clear", "cloudy", "rain", "hot", "cold"]),
+  temperatureCelsius: z.number(),
+  advisory: z.string(),
+  recommendedGate: z.string(),
+  icon: z.string(),
+});
+
+export const sentimentScoreSchema = z.object({
+  level: z.number().int().min(1).max(5),
+  label: z.string(),
+  emoji: z.string(),
+});
+
 // ─── Composite schemas ──────────────────────────────────────────────────────
 
 export const accessibilityNeedsSchema = z.object({
@@ -126,6 +204,8 @@ export const stadiumStateSchema = z.object({
   venues: z.array(venueSchema),
   incidents: z.array(incidentSchema),
   matchPhase: matchPhaseSchema,
+  matchState: matchStateSchema,
+  weather: weatherAdvisorySchema,
   lastUpdated: z.string().datetime(),
 });
 

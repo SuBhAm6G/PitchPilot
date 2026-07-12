@@ -139,6 +139,30 @@ export function generateStadiumState(
     venues: generateVenues(matchPhase, seed),
     incidents: [],
     matchPhase,
+    matchState: {
+      homeTeam: "USA",
+      awayTeam: "Mexico",
+      homeScore: 1,
+      awayScore: 0,
+      currentMinute: matchPhase === MATCH_PHASES.PRE_MATCH ? 0 : matchPhase === MATCH_PHASES.POST_MATCH ? 90 : 32,
+      events: matchPhase === MATCH_PHASES.PRE_MATCH ? [] : [
+        {
+          id: "e1",
+          minute: 14,
+          type: "goal",
+          team: "home",
+          playerName: "Pulisic",
+          description: "Stunning free kick from 25 yards.",
+        }
+      ]
+    },
+    weather: {
+      condition: "clear",
+      temperatureCelsius: 22,
+      advisory: "Perfect conditions for a match.",
+      recommendedGate: "Gate A",
+      icon: "☀️",
+    },
     lastUpdated: new Date().toISOString(),
   };
 }

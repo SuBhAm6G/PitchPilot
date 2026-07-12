@@ -132,7 +132,8 @@ export const CHAT_CONFIG = {
 /** Thresholds for UI warnings */
 export const UI_WARNING_THRESHOLDS = {
   OCCUPANCY_PERCENT: 85,
-  ACTIVE_INCIDENTS: 3,
+  ACTIVE_INCIDENTS: 2,
+  WAIT_TIME_MINUTES: 15,
 } as const;
 
 /** Progress bar color thresholds (percentage) */
@@ -149,5 +150,71 @@ export const CHAT_CONSTRAINTS = {
 
 /** General UI limits */
 export const UI_LIMITS = {
+  MAX_RECOMMENDATIONS: 3,
+  MAX_INCIDENTS_DISPLAY: 5,
   EMPTY_COUNT: 0,
+} as const;
+
+// ─── Match Events ────────────────────────────────────────────────────────────
+
+/** Match event type labels */
+export const MATCH_EVENT_LABELS: Record<string, string> = {
+  goal: "⚽ GOAL",
+  yellow_card: "🟨 Yellow Card",
+  red_card: "🟥 Red Card",
+  substitution: "🔄 Substitution",
+  var_review: "📺 VAR Review",
+  penalty: "⚽ Penalty",
+  half_time: "⏸️ Half Time",
+  full_time: "🏁 Full Time",
+} as const;
+
+// ─── Navigation & Emergency ──────────────────────────────────────────────────
+
+/** Zone adjacency graph for navigation (walking distance in meters) */
+export const ZONE_ADJACENCY: Record<string, Record<string, number>> = {
+  "north-lower": { "north-upper": 80, "east-lower": 150, "west-lower": 150 },
+  "north-upper": { "north-lower": 80, "east-upper": 160, "west-upper": 160 },
+  "south-lower": { "south-upper": 80, "east-lower": 150, "west-lower": 150 },
+  "south-upper": { "south-lower": 80, "east-upper": 160, "west-upper": 160 },
+  "east-lower": { "east-upper": 80, "north-lower": 150, "south-lower": 150 },
+  "east-upper": { "east-lower": 80, "north-upper": 160, "south-upper": 160 },
+  "west-lower": { "west-upper": 80, "north-lower": 150, "south-lower": 150, "vip-suites": 60 },
+  "west-upper": { "west-lower": 80, "north-upper": 160, "south-upper": 160, "vip-suites": 70 },
+  "vip-suites": { "west-lower": 60, "west-upper": 70 },
+} as const;
+
+/** Emergency exit locations per zone */
+export const ZONE_EXITS: Record<string, readonly string[]> = {
+  "north-lower": ["Gate A", "Gate B"],
+  "north-upper": ["Gate A"],
+  "south-lower": ["Gate C", "Gate D"],
+  "south-upper": ["Gate D"],
+  "east-lower": ["Gate B", "Gate C"],
+  "east-upper": ["Gate C"],
+  "west-lower": ["Gate A", "Gate D"],
+  "west-upper": ["Gate A"],
+  "vip-suites": ["VIP Exit"],
+} as const;
+
+/** Walking speed (meters per minute) */
+export const WALKING_SPEED_MPM = 80;
+export const WHEELCHAIR_SPEED_MPM = 50;
+
+// ─── Weather & Sentiment ─────────────────────────────────────────────────────
+
+/** Weather thresholds */
+export const WEATHER_THRESHOLDS = {
+  HOT_CELSIUS: 32,
+  COLD_CELSIUS: 10,
+  RAIN_PROBABILITY: 0.6,
+} as const;
+
+/** Sentiment levels */
+export const SENTIMENT_LEVELS = {
+  FLAT: 1,
+  MILD: 2,
+  ENGAGED: 3,
+  EXCITED: 4,
+  ELECTRIC: 5,
 } as const;

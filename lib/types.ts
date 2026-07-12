@@ -47,6 +47,8 @@ export interface StadiumState {
   readonly venues: readonly Venue[];
   readonly incidents: readonly Incident[];
   readonly matchPhase: MatchPhase;
+  readonly matchState: MatchState;
+  readonly weather: WeatherAdvisory;
   readonly lastUpdated: string;
 }
 
@@ -177,4 +179,91 @@ export interface StadiumApiResponse {
   readonly totalOccupancy: number;
   readonly totalCapacity: number;
   readonly occupancyPercent: number;
+}
+
+// ─── Match Events ────────────────────────────────────────────────────────────
+
+export interface MatchEvent {
+  readonly id: string;
+  readonly minute: number;
+  readonly type: MatchEventType;
+  readonly team: "home" | "away";
+  readonly playerName: string;
+  readonly description: string;
+}
+
+export type MatchEventType =
+  | "goal"
+  | "yellow_card"
+  | "red_card"
+  | "substitution"
+  | "var_review"
+  | "penalty"
+  | "half_time"
+  | "full_time";
+
+export interface MatchState {
+  readonly homeTeam: string;
+  readonly awayTeam: string;
+  readonly homeScore: number;
+  readonly awayScore: number;
+  readonly currentMinute: number;
+  readonly events: readonly MatchEvent[];
+}
+
+// ─── Navigation ──────────────────────────────────────────────────────────────
+
+export interface NavigationStep {
+  readonly instruction: string;
+  readonly distanceMeters: number;
+  readonly estimatedSeconds: number;
+  readonly landmark: string;
+}
+
+export interface NavigationRoute {
+  readonly from: string;
+  readonly to: string;
+  readonly steps: readonly NavigationStep[];
+  readonly totalDistanceMeters: number;
+  readonly totalEstimatedMinutes: number;
+  readonly isAccessible: boolean;
+}
+
+// ─── Emergency ───────────────────────────────────────────────────────────────
+
+export interface EmergencyRoute {
+  readonly userZone: string;
+  readonly nearestExit: string;
+  readonly avoidZones: readonly string[];
+  readonly instructions: readonly string[];
+  readonly estimatedEvacMinutes: number;
+}
+
+// ─── Itinerary ───────────────────────────────────────────────────────────────
+
+export interface ItineraryItem {
+  readonly id: string;
+  readonly time: string;
+  readonly action: string;
+  readonly reason: string;
+  readonly priority: "now" | "soon" | "later";
+  readonly icon: string;
+}
+
+// ─── Weather ─────────────────────────────────────────────────────────────────
+
+export interface WeatherAdvisory {
+  readonly condition: "clear" | "cloudy" | "rain" | "hot" | "cold";
+  readonly temperatureCelsius: number;
+  readonly advisory: string;
+  readonly recommendedGate: string;
+  readonly icon: string;
+}
+
+// ─── Sentiment ───────────────────────────────────────────────────────────────
+
+export interface SentimentScore {
+  readonly level: number; // 1-5
+  readonly label: string;
+  readonly emoji: string;
 }

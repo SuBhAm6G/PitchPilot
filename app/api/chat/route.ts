@@ -9,7 +9,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { chatRequestSchema, llmResponseSchema } from "@/lib/schemas";
 import { getPersonalizedRecommendations } from "@/lib/engine/contextDecisionEngine";
 import { CHAT_CONFIG } from "@/lib/utils/constants";
-import type { ChatResponse, ContextRecommendation } from "@/lib/types";
+import type { ChatResponse, ContextRecommendation, UserProfile, StadiumState, Incident } from "@/lib/types";
 
 export async function POST(request: Request): Promise<NextResponse<ChatResponse | { error: string }>> {
   try {
@@ -49,7 +49,7 @@ export async function POST(request: Request): Promise<NextResponse<ChatResponse 
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    const systemPrompt = buildSystemPrompt(userProfile.role, stadiumState.matchPhase, contextRecs);
+    const systemPrompt = buildSystemPrompt(userProfile, stadiumState, contextRecs);
 
     let responseText = "";
     try {
@@ -93,8 +93,8 @@ export async function POST(request: Request): Promise<NextResponse<ChatResponse 
 }
 
 function buildSystemPrompt(
-  role: string,
-  matchPhase: string,
+  userProfile: UserProfile,
+  stadiumState: StadiumState,
   recommendations: readonly ContextRecommendation[]
 ): string {
   const recSummary = recommendations
@@ -102,11 +102,19 @@ function buildSystemPrompt(
     .map((r) => `- [${r.type}] ${r.title}: ${r.message}`)
     .join("\n");
 
+  const weatherStr = stadiumState.weather ? `${stadiumState.weather.temperatureCelsius}°C, ${stadiumState.weather.condition}` : 'Unknown';
+  const matchStr = stadiumState.matchState ? `${stadiumState.matchState.homeTeam} ${stadiumState.matchState.homeScore} - ${stadiumState.matchState.awayScore} ${stadiumState.matchState.awayTeam} (${stadiumState.matchState.currentMinute}')` : 'Not Started';
+  const incidentsCount = stadiumState.incidents.filter((i: Incident) => i.status !== "resolved").length;
+
   return `You are ${CHAT_CONFIG.SYSTEM_PROMPT_ROLE}.
 
 Current context:
-- User role: ${role}
-- Match phase: ${matchPhase}
+- User role: ${userProfile.role}
+- Current Zone: ${userProfile.currentZone}
+- Match phase: ${stadiumState.matchPhase}
+- Match score: ${matchStr}
+- Weather: ${weatherStr}
+- Active incidents: ${incidentsCount}
 - Active recommendations from the stadium system:
 ${recSummary}
 
@@ -176,12 +184,20 @@ function generateFallbackReply(
       : "The stadium is moderately busy right now. Check the Ops Dashboard for zone-by-zone density.";
   }
 
+  if (lowerMessage.includes("weather")) {
+    return "⛅ The weather is currently clear and 22°C. Perfect conditions for a match!";
+  }
+
+  if (lowerMessage.includes("score") || lowerMessage.includes("stats") || lowerMessage.includes("match")) {
+    return "⚽ It's currently USA 1 - 0 Mexico. Pulisic scored a stunning free kick in the 14th minute!";
+  }
+
   if (lowerMessage.includes("help") || lowerMessage.includes("emergency") || lowerMessage.includes("medical")) {
     return "🏥 For medical emergencies, please notify the nearest staff member or call stadium security. First aid stations are located in every zone.";
   }
 
   const topRec = recommendations[0];
   return topRec
-    ? `Welcome to PitchPilot! Here's a tip: ${topRec.message}\n\nAsk me about food, restrooms, crowd info, or anything else about your stadium experience!`
-    : "Welcome to PitchPilot! I can help you with food options, restroom locations, crowd information, and more. What would you like to know?";
+    ? `Welcome to PitchPilot! Here's a tip: ${topRec.message}\n\nAsk me about food, restrooms, match stats, weather, or anything else about your stadium experience!`
+    : "Welcome to PitchPilot! I can help you with food options, restroom locations, match stats, weather, and more. What would you like to know?";
 }
