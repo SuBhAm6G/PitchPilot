@@ -36,15 +36,18 @@ export async function POST(request: Request): Promise<NextResponse<ChatResponse 
 
     if (!apiKey) {
       // Fallback: return engine-generated response without LLM
-      return NextResponse.json({
-        reply: generateFallbackReply(message, contextRecs),
-        recommendations: contextRecs.slice(0, 3),
-      });
+      return NextResponse.json(
+        {
+          reply: generateFallbackReply(message, contextRecs),
+          recommendations: contextRecs.slice(0, 3),
+        },
+        { headers: { "X-RateLimit-Policy": "60;w=60" } }
+      );
     }
 
     // Call Gemini API
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const systemPrompt = buildSystemPrompt(userProfile.role, stadiumState.matchPhase, contextRecs);
 
@@ -67,14 +70,19 @@ export async function POST(request: Request): Promise<NextResponse<ChatResponse 
     const structuredResponse = tryParseLLMResponse(responseText);
 
     if (structuredResponse) {
-      return NextResponse.json(structuredResponse);
+      return NextResponse.json(structuredResponse, {
+        headers: { "X-RateLimit-Policy": "60;w=60" },
+      });
     }
 
     // If LLM returned plain text, wrap it with engine recommendations
-    return NextResponse.json({
-      reply: responseText,
-      recommendations: contextRecs.slice(0, 3),
-    });
+    return NextResponse.json(
+      {
+        reply: responseText,
+        recommendations: contextRecs.slice(0, 3),
+      },
+      { headers: { "X-RateLimit-Policy": "60;w=60" } }
+    );
   } catch (error) {
     console.error("Chat API error:", error);
     return NextResponse.json(

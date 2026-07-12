@@ -10,15 +10,18 @@ import CrowdDensityCard from "@/components/dashboard/CrowdDensityCard";
 import WaitTimeCard from "@/components/dashboard/WaitTimeCard";
 import IncidentLog from "@/components/dashboard/IncidentLog";
 import ZoneStatusGrid from "@/components/dashboard/ZoneStatusGrid";
+import GraphicalStadiumMap from "@/components/dashboard/GraphicalStadiumMap";
+import ProactiveInsightBrief from "@/components/dashboard/ProactiveInsightBrief";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import type { StadiumApiResponse } from "@/lib/types";
 
 interface OpsDashboardProps {
   readonly data: StadiumApiResponse | null;
   readonly isLoading: boolean;
+  readonly selectedZone?: string;
 }
 
-export default function OpsDashboard({ data, isLoading }: OpsDashboardProps) {
+export default function OpsDashboard({ data, isLoading, selectedZone }: OpsDashboardProps) {
   if (isLoading || !data) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
@@ -36,8 +39,16 @@ export default function OpsDashboard({ data, isLoading }: OpsDashboardProps) {
         </p>
       </div>
 
-      {/* Summary stats */}
-      <StadiumOverview data={data} />
+      <ProactiveInsightBrief stadiumState={data.stadiumState} />
+      
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <GraphicalStadiumMap crowdReport={data.crowdReport} selectedZone={selectedZone} />
+        </div>
+        <div className="col-span-1 flex flex-col gap-6">
+          <StadiumOverview data={data} />
+        </div>
+      </div>
 
       {/* Zone grid */}
       <ZoneStatusGrid crowdReport={data.crowdReport} />

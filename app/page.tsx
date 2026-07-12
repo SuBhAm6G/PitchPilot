@@ -1,20 +1,36 @@
 /**
  * PitchPilot — Main Application Page
  * Orchestrates role selection, view switching, data fetching, and context engine.
+ * Uses dynamic imports for code splitting — only the active view is loaded.
  */
 
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useMemo } from "react";
+import dynamic from "next/dynamic";
 import Header from "@/components/layout/Header";
 import Sidebar from "@/components/layout/Sidebar";
-import OpsDashboard from "@/components/dashboard/OpsDashboard";
-import FanHub from "@/components/fan/FanHub";
-import ChatPanel from "@/components/chat/ChatPanel";
-import { getPersonalizedRecommendations } from "@/lib/engine/contextDecisionEngine";
-import type { UserProfile, StadiumApiResponse, ContextRecommendation } from "@/lib/types";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { useStadiumState } from "@/lib/hooks/useStadiumState";
+import type { UserProfile } from "@/lib/types";
 import type { UserRole, ZoneId } from "@/lib/utils/constants";
 import { USER_ROLES, STADIUM_ZONES } from "@/lib/utils/constants";
+
+// Dynamic imports for view-level code splitting
+const OpsDashboard = dynamic(
+  () => import("@/components/dashboard/OpsDashboard"),
+  { loading: () => <LoadingSpinner size="lg" label="Loading dashboard..." /> }
+);
+
+const FanHub = dynamic(
+  () => import("@/components/fan/FanHub"),
+  { loading: () => <LoadingSpinner size="lg" label="Loading fan hub..." /> }
+);
+
+const ChatPanel = dynamic(
+  () => import("@/components/chat/ChatPanel"),
+  { loading: () => <LoadingSpinner size="lg" label="Loading chat..." /> }
+);
 
 const DEFAULT_ZONE = STADIUM_ZONES[0]?.id ?? "north-lower";
 
@@ -38,48 +54,10 @@ export default function HomePage() {
   const [zone, setZone] = useState<ZoneId>(DEFAULT_ZONE as ZoneId);
   const [view, setView] = useState<"dashboard" | "fan" | "chat">("fan");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [stadiumData, setStadiumData] = useState<StadiumApiResponse | null>(null);
-  const [recommendations, setRecommendations] = useState<readonly ContextRecommendation[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [chatMessage, setChatMessage] = useState<string | undefined>(undefined);
 
-  const userProfile = buildUserProfile(role, zone);
-
-  const fetchStadiumData = useCallback(async () => {
-    try {
-      const response = await fetch("/api/stadium");
-      if (!response.ok) throw new Error(`HTTP ${String(response.status)}`);
-      const data = (await response.json()) as StadiumApiResponse;
-      setStadiumData(data);
-
-      // Run context engine with fresh data
-      const recs = getPersonalizedRecommendations(
-        buildUserProfile(role, zone),
-        data.stadiumState
-      );
-      setRecommendations(recs);
-    } catch (error) {
-      console.error("Failed to fetch stadium data:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [role, zone]);
-
-  // Initial fetch + 30s polling
-  useEffect(() => {
-    const loadData = () => {
-      fetchStadiumData().catch(console.error);
-    };
-    
-    // Defer initial execution to avoid synchronous setState inside effect body
-    const timeoutId = setTimeout(loadData, 0);
-    const intervalId = setInterval(loadData, 30_000);
-    
-    return () => {
-      clearTimeout(timeoutId);
-      clearInterval(intervalId);
-    };
-  }, [fetchStadiumData]);
+  const userProfile = useMemo(() => buildUserProfile(role, zone), [role, zone]);
+  const { stadiumData, recommendations, isLoading } = useStadiumState(userProfile);
 
   function handleChatAction(message: string) {
     setChatMessage(message);
@@ -118,7 +96,7 @@ export default function HomePage() {
 
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           {view === "dashboard" && (
-            <OpsDashboard data={stadiumData} isLoading={isLoading} />
+            <OpsDashboard data={stadiumData} isLoading={isLoading} selectedZone={zone} />
           )}
 
           {view === "fan" && (

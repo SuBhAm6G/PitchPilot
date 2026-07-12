@@ -5,8 +5,12 @@ import path from "path";
 export default defineConfig({
   test: {
     globals: true,
-    environment: "node",
-    include: ["__tests__/**/*.test.ts"],
+    environment: "jsdom",
+    setupFiles: ['./vitest.setup.ts'],
+    include: ["__tests__/**/*.test.{ts,tsx}"],
+    coverage: {
+      reporter: ["text", "json", "html"],
+    },
   },
   resolve: {
     alias: {

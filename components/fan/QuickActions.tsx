@@ -2,6 +2,7 @@
  * Quick action buttons for common fan tasks.
  * Fully keyboard-navigable with ARIA labels.
  */
+import { memo } from "react";
 
 interface QuickActionsProps {
   readonly onAction: (action: string) => void;
@@ -46,7 +47,7 @@ const ACTIONS: readonly ActionItem[] = [
   },
 ];
 
-export default function QuickActions({ onAction }: QuickActionsProps) {
+const QuickActions = memo(function QuickActions({ onAction }: QuickActionsProps) {
   return (
     <section aria-label="Quick actions">
       <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-slate-400">
@@ -68,4 +69,6 @@ export default function QuickActions({ onAction }: QuickActionsProps) {
       </div>
     </section>
   );
-}
+});
+
+export default QuickActions;

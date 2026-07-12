@@ -1,7 +1,9 @@
 /**
  * Stadium overview summary — total occupancy, active alerts, average wait.
+ * Memoized for efficient rendering.
  */
 
+import { useMemo, memo } from "react";
 import Card from "@/components/ui/Card";
 import type { StadiumApiResponse } from "@/lib/types";
 import { UI_WARNING_THRESHOLDS } from "@/lib/utils/constants";
@@ -18,45 +20,47 @@ interface StatItem {
   readonly colorClass: string;
 }
 
-export default function StadiumOverview({ data }: StadiumOverviewProps) {
-  const criticalZones = data.crowdReport.filter(
-    (z) => z.densityLevel === "critical"
-  ).length;
+const StadiumOverview = memo(function StadiumOverview({ data }: StadiumOverviewProps) {
+  const stats = useMemo<readonly StatItem[]>(() => {
+    const criticalZones = data.crowdReport.filter(
+      (z) => z.densityLevel === "critical"
+    ).length;
 
-  const highZones = data.crowdReport.filter(
-    (z) => z.densityLevel === "high"
-  ).length;
+    const highZones = data.crowdReport.filter(
+      (z) => z.densityLevel === "high"
+    ).length;
 
-  const activeIncidents = data.stadiumState.incidents.filter(
-    (inc) => inc.status !== "resolved"
-  ).length;
+    const activeIncidents = data.stadiumState.incidents.filter(
+      (inc) => inc.status !== "resolved"
+    ).length;
 
-  const stats: readonly StatItem[] = [
-    {
-      label: "Total Occupancy",
-      value: data.totalOccupancy.toLocaleString(),
-      subtext: `of ${data.totalCapacity.toLocaleString()} · ${String(data.occupancyPercent)}%`,
-      colorClass: data.occupancyPercent >= UI_WARNING_THRESHOLDS.OCCUPANCY_PERCENT ? "text-orange-400" : "text-emerald-400",
-    },
-    {
-      label: "Critical Zones",
-      value: String(criticalZones),
-      subtext: `${String(highZones)} high density`,
-      colorClass: criticalZones > 0 ? "text-red-400" : "text-emerald-400",
-    },
-    {
-      label: "Active Incidents",
-      value: String(activeIncidents),
-      subtext: `of ${String(data.stadiumState.incidents.length)} total`,
-      colorClass: activeIncidents > UI_WARNING_THRESHOLDS.ACTIVE_INCIDENTS ? "text-orange-400" : "text-sky-400",
-    },
-    {
-      label: "Match Phase",
-      value: formatMatchPhase(data.stadiumState.matchPhase),
-      subtext: "Current status",
-      colorClass: "text-indigo-400",
-    },
-  ];
+    return [
+      {
+        label: "Total Occupancy",
+        value: data.totalOccupancy.toLocaleString(),
+        subtext: `of ${data.totalCapacity.toLocaleString()} · ${String(data.occupancyPercent)}%`,
+        colorClass: data.occupancyPercent >= UI_WARNING_THRESHOLDS.OCCUPANCY_PERCENT ? "text-orange-400" : "text-emerald-400",
+      },
+      {
+        label: "Critical Zones",
+        value: String(criticalZones),
+        subtext: `${String(highZones)} high density`,
+        colorClass: criticalZones > 0 ? "text-red-400" : "text-emerald-400",
+      },
+      {
+        label: "Active Incidents",
+        value: String(activeIncidents),
+        subtext: `of ${String(data.stadiumState.incidents.length)} total`,
+        colorClass: activeIncidents > UI_WARNING_THRESHOLDS.ACTIVE_INCIDENTS ? "text-orange-400" : "text-sky-400",
+      },
+      {
+        label: "Match Phase",
+        value: formatMatchPhase(data.stadiumState.matchPhase),
+        subtext: "Current status",
+        colorClass: "text-indigo-400",
+      },
+    ];
+  }, [data]);
 
   return (
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -73,4 +77,6 @@ export default function StadiumOverview({ data }: StadiumOverviewProps) {
       ))}
     </div>
   );
-}
+});
+
+export default StadiumOverview;

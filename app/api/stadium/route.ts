@@ -55,7 +55,11 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(validated.data as StadiumApiResponse);
+    return NextResponse.json(validated.data as StadiumApiResponse, {
+      headers: {
+        "Cache-Control": "public, max-age=10, stale-while-revalidate=20",
+      },
+    });
   } catch (error) {
     console.error("Stadium API error:", error);
     return NextResponse.json(

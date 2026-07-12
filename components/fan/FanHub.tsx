@@ -5,6 +5,7 @@
 
 "use client";
 
+import { useCallback, memo } from "react";
 import RecommendationCard from "@/components/fan/RecommendationCard";
 import WaitTimeDisplay from "@/components/fan/WaitTimeDisplay";
 import QuickActions from "@/components/fan/QuickActions";
@@ -27,26 +28,26 @@ const ACTION_MESSAGES: Record<string, string> = {
   "report-issue": "I need to report an issue at the stadium.",
 };
 
-export default function FanHub({
+const FanHub = memo(function FanHub({
   data,
   recommendations,
   isLoading,
   userZone,
   onChatAction,
 }: FanHubProps) {
+  const handleAction = useCallback((actionId: string) => {
+    const message = ACTION_MESSAGES[actionId];
+    if (message) {
+      onChatAction(message);
+    }
+  }, [onChatAction]);
+
   if (isLoading || !data) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <LoadingSpinner size="lg" label="Loading fan experience..." />
       </div>
     );
-  }
-
-  function handleAction(actionId: string) {
-    const message = ACTION_MESSAGES[actionId];
-    if (message) {
-      onChatAction(message);
-    }
   }
 
   return (
@@ -82,4 +83,6 @@ export default function FanHub({
       </section>
     </section>
   );
-}
+});
+
+export default FanHub;

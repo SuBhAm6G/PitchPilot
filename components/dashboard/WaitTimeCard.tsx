@@ -2,6 +2,7 @@
  * Wait time card — displays food, restroom, and gate wait times.
  */
 
+import { useMemo, memo } from "react";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import type { Venue } from "@/lib/types";
@@ -27,8 +28,8 @@ function getWaitVariant(minutes: number): "low" | "medium" | "high" | "critical"
   return "critical";
 }
 
-export default function WaitTimeCard({ venues }: WaitTimeCardProps) {
-  const venueTypes = Object.values(VENUE_TYPES);
+const WaitTimeCard = memo(function WaitTimeCard({ venues }: WaitTimeCardProps) {
+  const venueTypes = useMemo(() => Object.values(VENUE_TYPES), []);
 
   return (
     <Card as="section">
@@ -63,4 +64,6 @@ export default function WaitTimeCard({ venues }: WaitTimeCardProps) {
       </div>
     </Card>
   );
-}
+});
+
+export default WaitTimeCard;

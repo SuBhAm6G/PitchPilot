@@ -2,6 +2,7 @@
  * Incident log table — sortable, with severity badges and status indicators.
  */
 
+import { useMemo, memo } from "react";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import type { Incident } from "@/lib/types";
@@ -27,8 +28,8 @@ function statusVariant(status: string): "low" | "info" | "success" {
   return "low";
 }
 
-export default function IncidentLog({ incidents }: IncidentLogProps) {
-  const sorted = prioritizeIncidents(incidents);
+const IncidentLog = memo(function IncidentLog({ incidents }: IncidentLogProps) {
+  const sorted = useMemo(() => prioritizeIncidents(incidents), [incidents]);
 
   return (
     <Card as="section">
@@ -90,4 +91,6 @@ export default function IncidentLog({ incidents }: IncidentLogProps) {
       )}
     </Card>
   );
-}
+});
+
+export default IncidentLog;

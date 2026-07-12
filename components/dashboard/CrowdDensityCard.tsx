@@ -2,6 +2,7 @@
  * Crowd density card — zone-by-zone density visualization with progress bars.
  */
 
+import { useMemo, memo } from "react";
 import Card from "@/components/ui/Card";
 import ProgressBar from "@/components/ui/ProgressBar";
 import Badge from "@/components/ui/Badge";
@@ -19,10 +20,12 @@ const DENSITY_BADGE_VARIANT: Record<string, BadgeVariant> = {
   critical: "critical",
 };
 
-export default function CrowdDensityCard({ crowdReport }: CrowdDensityCardProps) {
-  const sortedReport = [...crowdReport].sort(
-    (a, b) => b.occupancyPercent - a.occupancyPercent
-  );
+const CrowdDensityCard = memo(function CrowdDensityCard({ crowdReport }: CrowdDensityCardProps) {
+  const sortedReport = useMemo(() => {
+    return [...crowdReport].sort(
+      (a, b) => b.occupancyPercent - a.occupancyPercent
+    );
+  }, [crowdReport]);
 
   return (
     <Card as="section">
@@ -61,4 +64,6 @@ export default function CrowdDensityCard({ crowdReport }: CrowdDensityCardProps)
       </div>
     </Card>
   );
-}
+});
+
+export default CrowdDensityCard;

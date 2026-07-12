@@ -22,6 +22,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} dark`}>
+      <head>
+        <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
+        <meta httpEquiv="X-Frame-Options" content="DENY" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+      </head>
       <body className="min-h-screen font-sans text-white antialiased">
         {children}
       </body>
