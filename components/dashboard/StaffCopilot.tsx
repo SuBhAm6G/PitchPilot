@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import Card from "@/components/ui/Card";
 import type { Incident, StaffLocation } from "@/lib/types";
 
@@ -8,9 +8,11 @@ interface StaffCopilotProps {
 }
 
 const StaffCopilot = memo(function StaffCopilot({ incidents, staffProfile }: StaffCopilotProps) {
+  const [claimedIncidentId, setClaimedIncidentId] = useState<string | null>(null);
+
   const activeIncidents = incidents.filter(i => i.status !== "resolved");
-  const myIncidents = activeIncidents.filter(i => i.assignedTo === staffProfile.staffId);
-  const urgentIncidents = activeIncidents.filter(i => i.severity >= 3 && i.status === "open");
+  const myIncidents = activeIncidents.filter(i => i.assignedTo === staffProfile.staffId || i.id === claimedIncidentId);
+  const urgentIncidents = activeIncidents.filter(i => i.severity >= 3 && i.status === "open" && i.id !== claimedIncidentId);
 
   return (
     <Card as="section" className="border-indigo-500/30 bg-indigo-900/10">
@@ -36,7 +38,10 @@ const StaffCopilot = memo(function StaffCopilot({ incidents, staffProfile }: Sta
           <div className="rounded-lg border border-amber-500/20 bg-amber-900/10 p-3">
             <h3 className="text-xs font-semibold text-amber-500">Unassigned Priority Task</h3>
             <p className="mt-1 font-medium text-amber-200">{urgentIncidents[0].title}</p>
-            <button className="mt-2 rounded bg-amber-500/20 px-3 py-1 text-xs font-semibold text-amber-300 hover:bg-amber-500/30">
+            <button 
+              onClick={() => setClaimedIncidentId(urgentIncidents[0]?.id ?? null)}
+              className="mt-2 rounded bg-amber-500/20 px-3 py-1 text-xs font-semibold text-amber-300 hover:bg-amber-500/30"
+            >
               Claim Task
             </button>
           </div>

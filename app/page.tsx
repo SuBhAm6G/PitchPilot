@@ -10,6 +10,7 @@ import { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import Header from "@/components/layout/Header";
 import Sidebar from "@/components/layout/Sidebar";
+import WelcomeModal from "@/components/layout/WelcomeModal";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { useStadiumState } from "@/lib/hooks/useStadiumState";
 import type { UserProfile } from "@/lib/types";
@@ -34,12 +35,13 @@ const ChatPanel = dynamic(
 
 const DEFAULT_ZONE = STADIUM_ZONES[0]?.id ?? "north-lower";
 
-function buildUserProfile(role: UserRole, zone: ZoneId): UserProfile {
+function buildUserProfile(role: UserRole, zone: ZoneId, seatNumber: string): UserProfile {
   return {
     id: "user-001",
     name: role === USER_ROLES.FAN ? "Fan" : "Staff Member",
     role,
     currentZone: zone,
+    seatNumber,
     preferredLanguage: "en",
     accessibilityNeeds: {
       wheelchairAccess: false,
@@ -50,13 +52,15 @@ function buildUserProfile(role: UserRole, zone: ZoneId): UserProfile {
 }
 
 export default function HomePage() {
+  const [setupComplete, setSetupComplete] = useState(false);
   const [role, setRole] = useState<UserRole>(USER_ROLES.FAN);
   const [zone, setZone] = useState<ZoneId>(DEFAULT_ZONE as ZoneId);
+  const [seat, setSeat] = useState<string>("");
   const [view, setView] = useState<"dashboard" | "fan" | "chat">("fan");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [chatMessage, setChatMessage] = useState<string | undefined>(undefined);
 
-  const userProfile = useMemo(() => buildUserProfile(role, zone), [role, zone]);
+  const userProfile = useMemo(() => buildUserProfile(role, zone, seat), [role, zone, seat]);
   const { stadiumData, recommendations, isLoading } = useStadiumState(userProfile);
 
   function handleChatAction(message: string) {
@@ -64,8 +68,19 @@ export default function HomePage() {
     setView("chat");
   }
 
+  function handleSetupComplete(selectedRole: UserRole, selectedZone: ZoneId, selectedSeat: string) {
+    setRole(selectedRole);
+    setZone(selectedZone);
+    setSeat(selectedSeat);
+    setSetupComplete(true);
+    setView(selectedRole === "fan" ? "fan" : "dashboard");
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
+      {!setupComplete && (
+        <WelcomeModal stadiumData={stadiumData} onComplete={handleSetupComplete} />
+      )}
       <Header
         currentRole={role}
         currentView={view}

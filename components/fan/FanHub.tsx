@@ -14,6 +14,7 @@ import PersonalItinerary from "@/components/fan/PersonalItinerary";
 import WeatherBanner from "@/components/fan/WeatherBanner";
 import FanSentiment from "@/components/fan/FanSentiment";
 import EmergencyBanner from "@/components/fan/EmergencyBanner";
+import GreenTravelBadge from "@/components/fan/GreenTravelBadge";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import type { ContextRecommendation, StadiumApiResponse, UserProfile } from "@/lib/types";
 import { UI_LIMITS } from "@/lib/utils/constants";
@@ -107,6 +108,7 @@ const FanHub = memo(function FanHub({
         <div className="flex flex-col gap-6 lg:col-span-8">
           <QuickActions onAction={handleAction} />
           <WaitTimeDisplay venues={data.stadiumState.venues} userZone={userProfile.currentZone} />
+          <GreenTravelBadge profile={userProfile} />
           
           <section aria-label="Personalized recommendations">
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-slate-400">

@@ -166,6 +166,7 @@ export const userProfileSchema = z.object({
   name: z.string().min(1),
   role: userRoleSchema,
   currentZone: zoneIdSchema,
+  seatNumber: z.string().optional(),
   preferredLanguage: z.string().min(2),
   accessibilityNeeds: accessibilityNeedsSchema,
 });

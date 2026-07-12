@@ -13,6 +13,7 @@ import IncidentLog from "@/components/dashboard/IncidentLog";
 import ZoneStatusGrid from "@/components/dashboard/ZoneStatusGrid";
 import GraphicalStadiumMap from "@/components/dashboard/GraphicalStadiumMap";
 import ProactiveInsightBrief from "@/components/dashboard/ProactiveInsightBrief";
+import ShiftBriefing from "@/components/dashboard/ShiftBriefing";
 import StaffCopilot from "@/components/dashboard/StaffCopilot";
 import PredictiveCongestion from "@/components/dashboard/PredictiveCongestion";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
@@ -71,7 +72,8 @@ export default function OpsDashboard({ data, isLoading, userProfile, selectedZon
       <ProactiveInsightBrief stadiumState={data.stadiumState} />
       
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 flex flex-col gap-6">
+          <ShiftBriefing profile={userProfile} state={data.stadiumState} />
           <GraphicalStadiumMap crowdReport={data.crowdReport} selectedZone={selectedZone} />
         </div>
         <div className="col-span-1 flex flex-col gap-6">

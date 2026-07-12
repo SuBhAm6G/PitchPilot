@@ -35,12 +35,12 @@ export function calculateRoute(
   while (unvisited.size > 0) {
     let current: string | null = null;
     for (const zone of unvisited) {
-      if (current === null || distances[zone] < distances[current]) {
+      if (current === null || (distances[zone] ?? Infinity) < (distances[current] ?? Infinity)) {
         current = zone;
       }
     }
 
-    if (current === null || distances[current] === Infinity) break;
+    if (current === null || (distances[current] ?? Infinity) === Infinity) break;
     if (current === toZoneId) break;
 
     unvisited.delete(current);
@@ -51,8 +51,8 @@ export function calculateRoute(
     for (const [neighbor, weight] of Object.entries(neighbors)) {
       if (!unvisited.has(neighbor)) continue;
       
-      const alt = distances[current] + weight;
-      if (alt < distances[neighbor]) {
+      const alt = (distances[current] ?? Infinity) + weight;
+      if (alt < (distances[neighbor] ?? Infinity)) {
         distances[neighbor] = alt;
         previous[neighbor] = current;
       }
@@ -66,7 +66,7 @@ export function calculateRoute(
   let curr: string | null = toZoneId;
   while (curr !== null) {
     path.unshift(curr);
-    curr = previous[curr];
+    curr = previous[curr] ?? null;
   }
 
   const speed = accessibility.wheelchairAccess ? WHEELCHAIR_SPEED_MPM : WALKING_SPEED_MPM;
@@ -76,7 +76,8 @@ export function calculateRoute(
   for (let i = 0; i < path.length - 1; i++) {
     const currentZone = path[i];
     const nextZone = path[i + 1];
-    const distance = ZONE_ADJACENCY[currentZone][nextZone];
+    if (!currentZone || !nextZone) continue;
+    const distance = ZONE_ADJACENCY[currentZone]?.[nextZone] ?? 100;
     
     totalDistance += distance;
     steps.push({

@@ -5,7 +5,7 @@ import { SENTIMENT_LEVELS } from "@/lib/utils/constants";
  * Deterministic engine for computing crowd sentiment score.
  */
 export function computeSentiment(stadiumState: StadiumState): SentimentScore {
-  let score = SENTIMENT_LEVELS.ENGAGED; // Base score 3
+  let score: number = SENTIMENT_LEVELS.ENGAGED; // Base score 3
 
   // 1. Match phase factors
   if (stadiumState.matchPhase === "first_half" || stadiumState.matchPhase === "second_half") {

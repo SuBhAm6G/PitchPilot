@@ -22,8 +22,11 @@ export interface UserProfile {
   readonly name: string;
   readonly role: UserRole;
   readonly currentZone: ZoneId;
+  readonly seatNumber?: string;
   readonly preferredLanguage: string;
   readonly accessibilityNeeds: AccessibilityNeeds;
+  readonly travelMethod?: "transit" | "car" | "walk";
+  readonly groupSize?: number;
 }
 
 export interface AccessibilityNeeds {
