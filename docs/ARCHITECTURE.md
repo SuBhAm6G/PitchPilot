@@ -22,4 +22,4 @@ PitchPilot uses 10 pure, deterministic engines to power its context-awareness. T
 1. **Testability**: Pure functions (same input always equals same output) are incredibly easy to test. PitchPilot has over 160 unit tests that run in milliseconds because they don't rely on the DOM or React.
 2. **Framework Agnosticism**: If FIFA decides to rewrite the app in React Native, Flutter, or Vue, the engines can be copied over directly without modification.
 3. **Offline Fallback**: By placing the logic in pure engines rather than LLMs, we guarantee that the app will function even if the internet goes down or the AI API key is missing. The `aiService` uses these engines to generate fallback chat replies instantly.
-4. **Explainability**: Unlike LLMs, deterministic engines are 100% predictable. A security officer knows *exactly* why an incident was prioritized a certain way.
+4. **Explainability**: Unlike LLMs, deterministic engines are 100% predictable. A security officer knows _exactly_ why an incident was prioritized a certain way.

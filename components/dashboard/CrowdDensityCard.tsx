@@ -20,10 +20,12 @@ const DENSITY_BADGE_VARIANT: Record<string, BadgeVariant> = {
   critical: "critical",
 };
 
-const CrowdDensityCard = memo(function CrowdDensityCard({ crowdReport }: CrowdDensityCardProps) {
+const CrowdDensityCard = memo(function CrowdDensityCard({
+  crowdReport,
+}: CrowdDensityCardProps) {
   const sortedReport = useMemo(() => {
     return [...crowdReport].sort(
-      (a, b) => b.occupancyPercent - a.occupancyPercent
+      (a, b) => b.occupancyPercent - a.occupancyPercent,
     );
   }, [crowdReport]);
 
@@ -57,7 +59,8 @@ const CrowdDensityCard = memo(function CrowdDensityCard({ crowdReport }: CrowdDe
               showPercentage={false}
             />
             <p className="mt-1 text-xs text-slate-600">
-              {zone.currentOccupancy.toLocaleString()} / {zone.maxCapacity.toLocaleString()}
+              {zone.currentOccupancy.toLocaleString()} /{" "}
+              {zone.maxCapacity.toLocaleString()}
             </p>
           </div>
         ))}

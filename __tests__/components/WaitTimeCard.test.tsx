@@ -15,11 +15,11 @@ describe("WaitTimeCard", () => {
         isOpen: true,
         estimatedWaitMinutes: 5,
         currentQueueLength: 10,
-      }
+      },
     ];
 
     render(<WaitTimeCard venues={mockVenues} />);
-    
+
     // Check if food courts text renders
     expect(screen.getByText("Food Courts")).toBeTruthy();
     // 1 open

@@ -27,9 +27,10 @@ export function classifyWaitTime(minutes: number): WaitTimeLevel {
 /** Estimate wait time for a venue based on its current queue */
 export function estimateWaitTime(venue: Venue): WaitTimeEstimate {
   const serviceRate = SERVICE_RATES[venue.type];
-  const estimatedMinutes = serviceRate > 0
-    ? Math.round(venue.currentQueueLength / serviceRate)
-    : venue.estimatedWaitMinutes;
+  const estimatedMinutes =
+    serviceRate > 0
+      ? Math.round(venue.currentQueueLength / serviceRate)
+      : venue.estimatedWaitMinutes;
 
   return {
     venueId: venue.id,
@@ -45,11 +46,9 @@ export function estimateWaitTime(venue: Venue): WaitTimeEstimate {
 export function findShortestQueue(
   venues: readonly Venue[],
   venueType: VenueType,
-  userZone?: string
+  userZone?: string,
 ): Venue | undefined {
-  const openVenues = venues.filter(
-    (v) => v.type === venueType && v.isOpen
-  );
+  const openVenues = venues.filter((v) => v.type === venueType && v.isOpen);
 
   if (openVenues.length === 0) return undefined;
 
@@ -69,7 +68,7 @@ export function findShortestQueue(
 /** Get wait time estimates for all venues of a given type */
 export function getWaitTimesByType(
   venues: readonly Venue[],
-  venueType: VenueType
+  venueType: VenueType,
 ): readonly WaitTimeEstimate[] {
   return venues
     .filter((v) => v.type === venueType && v.isOpen)
@@ -80,17 +79,15 @@ export function getWaitTimesByType(
 /** Calculate average wait time across all open venues of a given type */
 export function averageWaitTime(
   venues: readonly Venue[],
-  venueType: VenueType
+  venueType: VenueType,
 ): number {
-  const openVenues = venues.filter(
-    (v) => v.type === venueType && v.isOpen
-  );
+  const openVenues = venues.filter((v) => v.type === venueType && v.isOpen);
 
   if (openVenues.length === 0) return 0;
 
   const totalWait = openVenues.reduce(
     (sum, v) => sum + v.estimatedWaitMinutes,
-    0
+    0,
   );
 
   return Math.round(totalWait / openVenues.length);

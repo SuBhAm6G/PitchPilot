@@ -80,13 +80,10 @@ describe("getPersonalizedRecommendations", () => {
 
   it("should generate different recommendations for Fan vs Staff", () => {
     const state = createStadiumStateWithIncidents();
-    const fanRecs = getPersonalizedRecommendations(
-      createFanProfile(),
-      state
-    );
+    const fanRecs = getPersonalizedRecommendations(createFanProfile(), state);
     const staffRecs = getPersonalizedRecommendations(
       createStaffProfile(),
-      state
+      state,
     );
 
     // Fan should get food/restroom recs
@@ -97,7 +94,7 @@ describe("getPersonalizedRecommendations", () => {
     // Staff should get incident-related recs
     const staffTypes = staffRecs.map((r) => r.type);
     const hasOpsRec = staffTypes.some(
-      (t) => t === "incident" || t === "crowd_alert"
+      (t) => t === "incident" || t === "crowd_alert",
     );
     expect(hasOpsRec).toBe(true);
   });
@@ -106,20 +103,14 @@ describe("getPersonalizedRecommendations", () => {
     const profile = createFanProfile();
 
     const preMatchState = generateStadiumState(MATCH_PHASES.PRE_MATCH, 42);
-    const preMatchRecs = getPersonalizedRecommendations(
-      profile,
-      preMatchState
-    );
+    const preMatchRecs = getPersonalizedRecommendations(profile, preMatchState);
     const hasNavigationRec = preMatchRecs.some((r) => r.type === "navigation");
     expect(hasNavigationRec).toBe(true);
 
     const halfTimeState = generateStadiumState(MATCH_PHASES.HALF_TIME, 42);
-    const halfTimeRecs = getPersonalizedRecommendations(
-      profile,
-      halfTimeState
-    );
+    const halfTimeRecs = getPersonalizedRecommendations(profile, halfTimeState);
     const hasFoodRec = halfTimeRecs.some(
-      (r) => r.type === "food" && r.title.includes("Half-Time")
+      (r) => r.type === "food" && r.title.includes("Half-Time"),
     );
     expect(hasFoodRec).toBe(true);
   });
@@ -133,10 +124,10 @@ describe("getPersonalizedRecommendations", () => {
     expect(accessibilityRecs.length).toBeGreaterThanOrEqual(2);
 
     const hasWheelchair = accessibilityRecs.some((r) =>
-      r.message.toLowerCase().includes("wheelchair")
+      r.message.toLowerCase().includes("wheelchair"),
     );
     const hasHearing = accessibilityRecs.some((r) =>
-      r.message.toLowerCase().includes("hearing")
+      r.message.toLowerCase().includes("hearing"),
     );
     expect(hasWheelchair).toBe(true);
     expect(hasHearing).toBe(true);

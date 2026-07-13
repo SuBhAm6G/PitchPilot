@@ -9,9 +9,7 @@ import type { MatchPhase } from "@/lib/utils/constants";
  * e.g. "first_half" -> "First Half"
  */
 export function formatMatchPhase(phase: MatchPhase | string): string {
-  return phase
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+  return phase.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 /**
@@ -19,5 +17,8 @@ export function formatMatchPhase(phase: MatchPhase | string): string {
  */
 export function formatTime(isoString: string): string {
   const date = new Date(isoString);
-  return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+  return date.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }

@@ -1,5 +1,13 @@
-import { ZONE_ADJACENCY, WALKING_SPEED_MPM, WHEELCHAIR_SPEED_MPM } from "@/lib/utils/constants";
-import type { NavigationRoute, NavigationStep, AccessibilityNeeds } from "@/lib/types";
+import {
+  ZONE_ADJACENCY,
+  WALKING_SPEED_MPM,
+  WHEELCHAIR_SPEED_MPM,
+} from "@/lib/utils/constants";
+import type {
+  NavigationRoute,
+  NavigationStep,
+  AccessibilityNeeds,
+} from "@/lib/types";
 
 /**
  * Deterministic engine for A* shortest-path routing between stadium zones.
@@ -7,13 +15,20 @@ import type { NavigationRoute, NavigationStep, AccessibilityNeeds } from "@/lib/
 export function calculateRoute(
   fromZoneId: string,
   toZoneId: string,
-  accessibility: AccessibilityNeeds
+  accessibility: AccessibilityNeeds,
 ): NavigationRoute | null {
   if (fromZoneId === toZoneId) {
     return {
       from: fromZoneId,
       to: toZoneId,
-      steps: [{ instruction: "You are already here.", distanceMeters: 0, estimatedSeconds: 0, landmark: "" }],
+      steps: [
+        {
+          instruction: "You are already here.",
+          distanceMeters: 0,
+          estimatedSeconds: 0,
+          landmark: "",
+        },
+      ],
       totalDistanceMeters: 0,
       totalEstimatedMinutes: 0,
       isAccessible: true,
@@ -35,12 +50,16 @@ export function calculateRoute(
   while (unvisited.size > 0) {
     let current: string | null = null;
     for (const zone of unvisited) {
-      if (current === null || (distances[zone] ?? Infinity) < (distances[current] ?? Infinity)) {
+      if (
+        current === null ||
+        (distances[zone] ?? Infinity) < (distances[current] ?? Infinity)
+      ) {
         current = zone;
       }
     }
 
-    if (current === null || (distances[current] ?? Infinity) === Infinity) break;
+    if (current === null || (distances[current] ?? Infinity) === Infinity)
+      break;
     if (current === toZoneId) break;
 
     unvisited.delete(current);
@@ -50,7 +69,7 @@ export function calculateRoute(
 
     for (const [neighbor, weight] of Object.entries(neighbors)) {
       if (!unvisited.has(neighbor)) continue;
-      
+
       const alt = (distances[current] ?? Infinity) + weight;
       if (alt < (distances[neighbor] ?? Infinity)) {
         distances[neighbor] = alt;
@@ -69,7 +88,9 @@ export function calculateRoute(
     curr = previous[curr] ?? null;
   }
 
-  const speed = accessibility.wheelchairAccess ? WHEELCHAIR_SPEED_MPM : WALKING_SPEED_MPM;
+  const speed = accessibility.wheelchairAccess
+    ? WHEELCHAIR_SPEED_MPM
+    : WALKING_SPEED_MPM;
   const steps: NavigationStep[] = [];
   let totalDistance = 0;
 
@@ -78,13 +99,16 @@ export function calculateRoute(
     const nextZone = path[i + 1];
     if (!currentZone || !nextZone) continue;
     const distance = ZONE_ADJACENCY[currentZone]?.[nextZone] ?? 100;
-    
+
     totalDistance += distance;
     steps.push({
       instruction: `Proceed from ${formatZone(currentZone)} to ${formatZone(nextZone)}`,
       distanceMeters: distance,
       estimatedSeconds: Math.round((distance / speed) * 60),
-      landmark: i === path.length - 2 ? "Final destination ahead" : "Follow overhead signs",
+      landmark:
+        i === path.length - 2
+          ? "Final destination ahead"
+          : "Follow overhead signs",
     });
   }
 
@@ -99,5 +123,8 @@ export function calculateRoute(
 }
 
 function formatZone(zoneId: string): string {
-  return zoneId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  return zoneId
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
 }

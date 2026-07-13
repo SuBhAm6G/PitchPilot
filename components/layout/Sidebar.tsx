@@ -17,12 +17,14 @@ interface SidebarProps {
   readonly onClose: () => void;
 }
 
-const ROLE_OPTIONS: readonly { role: UserRole; label: string; icon: string }[] = [
-  { role: USER_ROLES.FAN, label: "Fan", icon: "🎉" },
-  { role: USER_ROLES.STAFF, label: "Staff", icon: "👷" },
-  { role: USER_ROLES.SECURITY, label: "Security", icon: "🛡️" },
-  { role: USER_ROLES.MEDICAL, label: "Medical", icon: "🏥" },
-];
+const ROLE_OPTIONS: readonly { role: UserRole; label: string; icon: string }[] =
+  [
+    { role: USER_ROLES.FAN, label: "Fan", icon: "🎉" },
+    { role: USER_ROLES.STAFF, label: "Staff", icon: "👷" },
+    { role: USER_ROLES.SECURITY, label: "Security", icon: "🛡️" },
+    { role: USER_ROLES.MEDICAL, label: "Medical", icon: "🏥" },
+    { role: USER_ROLES.ORGANIZER, label: "Organizer", icon: "📊" },
+  ];
 
 export default function Sidebar({
   currentRole,
@@ -39,7 +41,9 @@ export default function Sidebar({
         <div
           className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
           onClick={onClose}
-          onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") onClose();
+          }}
           role="button"
           tabIndex={0}
           aria-label="Close sidebar"

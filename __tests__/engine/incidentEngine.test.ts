@@ -17,16 +17,70 @@ import type { Incident, StaffLocation } from "@/lib/types";
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 
 const MOCK_INCIDENTS: readonly Incident[] = [
-  { id: "INC-1", title: "Spill", description: "Floor spill", severity: 1, status: "open", zoneId: "north-lower", reportedAt: "2026-07-11T14:00:00Z", assignedTo: null },
-  { id: "INC-2", title: "Lost Child", description: "Lost 7yo", severity: 4, status: "open", zoneId: "south-lower", reportedAt: "2026-07-11T14:10:00Z", assignedTo: null },
-  { id: "INC-3", title: "Fight", description: "Altercation", severity: 3, status: "in_progress", zoneId: "east-lower", reportedAt: "2026-07-11T14:05:00Z", assignedTo: "STAFF-1" },
-  { id: "INC-4", title: "Resolved Item", description: "Done", severity: 2, status: "resolved", zoneId: "west-lower", reportedAt: "2026-07-11T13:50:00Z", assignedTo: "STAFF-2" },
+  {
+    id: "INC-1",
+    title: "Spill",
+    description: "Floor spill",
+    severity: 1,
+    status: "open",
+    zoneId: "north-lower",
+    reportedAt: "2026-07-11T14:00:00Z",
+    assignedTo: null,
+  },
+  {
+    id: "INC-2",
+    title: "Lost Child",
+    description: "Lost 7yo",
+    severity: 4,
+    status: "open",
+    zoneId: "south-lower",
+    reportedAt: "2026-07-11T14:10:00Z",
+    assignedTo: null,
+  },
+  {
+    id: "INC-3",
+    title: "Fight",
+    description: "Altercation",
+    severity: 3,
+    status: "in_progress",
+    zoneId: "east-lower",
+    reportedAt: "2026-07-11T14:05:00Z",
+    assignedTo: "STAFF-1",
+  },
+  {
+    id: "INC-4",
+    title: "Resolved Item",
+    description: "Done",
+    severity: 2,
+    status: "resolved",
+    zoneId: "west-lower",
+    reportedAt: "2026-07-11T13:50:00Z",
+    assignedTo: "STAFF-2",
+  },
 ];
 
 const MOCK_STAFF: readonly StaffLocation[] = [
-  { staffId: "S1", name: "Officer A", role: "security", currentZone: "south-lower", isAvailable: true },
-  { staffId: "S2", name: "Officer B", role: "security", currentZone: "north-lower", isAvailable: true },
-  { staffId: "S3", name: "Officer C", role: "security", currentZone: "east-lower", isAvailable: false },
+  {
+    staffId: "S1",
+    name: "Officer A",
+    role: "security",
+    currentZone: "south-lower",
+    isAvailable: true,
+  },
+  {
+    staffId: "S2",
+    name: "Officer B",
+    role: "security",
+    currentZone: "north-lower",
+    isAvailable: true,
+  },
+  {
+    staffId: "S3",
+    name: "Officer C",
+    role: "security",
+    currentZone: "east-lower",
+    isAvailable: false,
+  },
 ];
 
 // ─── Tests ───────────────────────────────────────────────────────────────────
@@ -40,8 +94,18 @@ describe("prioritizeIncidents", () => {
 
   it("should sort by timestamp (newest first) within same severity", () => {
     const sameSeverity: readonly Incident[] = [
-      { ...MOCK_INCIDENTS[0]!, id: "A", severity: 2, reportedAt: "2026-07-11T14:00:00Z" },
-      { ...MOCK_INCIDENTS[0]!, id: "B", severity: 2, reportedAt: "2026-07-11T14:30:00Z" },
+      {
+        ...MOCK_INCIDENTS[0]!,
+        id: "A",
+        severity: 2,
+        reportedAt: "2026-07-11T14:00:00Z",
+      },
+      {
+        ...MOCK_INCIDENTS[0]!,
+        id: "B",
+        severity: 2,
+        reportedAt: "2026-07-11T14:30:00Z",
+      },
     ];
     const sorted = prioritizeIncidents(sameSeverity);
     expect(sorted[0]?.id).toBe("B");
@@ -105,9 +169,18 @@ describe("assignIncidentToStaff", () => {
 
   it("should return null when no staff available", () => {
     const noAvailableStaff: readonly StaffLocation[] = [
-      { staffId: "S1", name: "Busy", role: "security", currentZone: "north-lower", isAvailable: false },
+      {
+        staffId: "S1",
+        name: "Busy",
+        role: "security",
+        currentZone: "north-lower",
+        isAvailable: false,
+      },
     ];
-    const assignment = assignIncidentToStaff(MOCK_INCIDENTS[0]!, noAvailableStaff);
+    const assignment = assignIncidentToStaff(
+      MOCK_INCIDENTS[0]!,
+      noAvailableStaff,
+    );
     expect(assignment).toBeNull();
   });
 

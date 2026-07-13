@@ -8,7 +8,7 @@ import { INCIDENT_STATUS } from "@/lib/utils/constants";
 
 /** Sort incidents by severity (highest first), then by timestamp (newest first) */
 export function prioritizeIncidents(
-  incidents: readonly Incident[]
+  incidents: readonly Incident[],
 ): readonly Incident[] {
   return [...incidents].sort((a, b) => {
     // Higher severity first
@@ -21,21 +21,21 @@ export function prioritizeIncidents(
 /** Filter incidents by status */
 export function filterByStatus(
   incidents: readonly Incident[],
-  status: string
+  status: string,
 ): readonly Incident[] {
   return incidents.filter((inc) => inc.status === status);
 }
 
 /** Get all active (non-resolved) incidents */
 export function getActiveIncidents(
-  incidents: readonly Incident[]
+  incidents: readonly Incident[],
 ): readonly Incident[] {
   return incidents.filter((inc) => inc.status !== INCIDENT_STATUS.RESOLVED);
 }
 
 /** Count incidents by severity */
 export function countBySeverity(
-  incidents: readonly Incident[]
+  incidents: readonly Incident[],
 ): Record<number, number> {
   const counts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0 };
   for (const inc of incidents) {
@@ -50,7 +50,7 @@ export function countBySeverity(
  */
 export function assignIncidentToStaff(
   incident: Incident,
-  staffLocations: readonly StaffLocation[]
+  staffLocations: readonly StaffLocation[],
 ): IncidentAssignment | null {
   const availableStaff = staffLocations.filter((s) => s.isAvailable);
 
@@ -58,7 +58,7 @@ export function assignIncidentToStaff(
 
   // Prefer staff in the same zone
   const sameZoneStaff = availableStaff.find(
-    (s) => s.currentZone === incident.zoneId
+    (s) => s.currentZone === incident.zoneId,
   );
 
   const assignedStaff = sameZoneStaff ?? availableStaff[0];

@@ -18,6 +18,7 @@ describe("userProfileSchema", () => {
       id: "user-001",
       name: "John",
       role: "fan",
+      stadiumId: "metlife",
       currentZone: "north-lower",
       preferredLanguage: "en",
       accessibilityNeeds: {
@@ -41,6 +42,7 @@ describe("userProfileSchema", () => {
       id: "user-001",
       name: "John",
       role: "admin",
+      stadiumId: "metlife",
       currentZone: "north-lower",
       preferredLanguage: "en",
       accessibilityNeeds: {
@@ -58,6 +60,7 @@ describe("userProfileSchema", () => {
       id: "user-001",
       name: "John",
       role: "fan",
+      stadiumId: "metlife",
       currentZone: "invalid-zone",
       preferredLanguage: "en",
       accessibilityNeeds: {
@@ -139,7 +142,11 @@ describe("chatRequestSchema", () => {
         role: "fan",
         currentZone: "north-lower",
         preferredLanguage: "en",
-        accessibilityNeeds: { wheelchairAccess: false, visualAssistance: false, hearingAssistance: false },
+        accessibilityNeeds: {
+          wheelchairAccess: false,
+          visualAssistance: false,
+          hearingAssistance: false,
+        },
       },
       stadiumState: {
         zones: [],
@@ -159,7 +166,13 @@ describe("llmResponseSchema", () => {
     const valid = {
       reply: "Here is some food info.",
       recommendations: [
-        { type: "food", title: "Food Option", message: "Try the grill!", priority: 2, icon: "utensils" },
+        {
+          type: "food",
+          title: "Food Option",
+          message: "Try the grill!",
+          priority: 2,
+          icon: "utensils",
+        },
       ],
     };
     const result = llmResponseSchema.safeParse(valid);
@@ -178,7 +191,13 @@ describe("llmResponseSchema", () => {
     const invalid = {
       reply: "Hello",
       recommendations: [
-        { type: "invalid_type", title: "Bad", message: "Bad rec", priority: 1, icon: "info" },
+        {
+          type: "invalid_type",
+          title: "Bad",
+          message: "Bad rec",
+          priority: 1,
+          icon: "info",
+        },
       ],
     };
     const result = llmResponseSchema.safeParse(invalid);

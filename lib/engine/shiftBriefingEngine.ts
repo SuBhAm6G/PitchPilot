@@ -5,7 +5,10 @@
 import type { UserProfile, StadiumState } from "@/lib/types";
 
 function formatZone(zoneId: string): string {
-  return zoneId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  return zoneId
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
 export interface ShiftBriefing {
@@ -16,23 +19,31 @@ export interface ShiftBriefing {
   readonly escalationProtocol: string;
 }
 
-export function generateShiftBriefing(profile: UserProfile, state: StadiumState): ShiftBriefing | null {
+export function generateShiftBriefing(
+  profile: UserProfile,
+  state: StadiumState,
+): ShiftBriefing | null {
   if (profile.role !== "staff" && profile.role !== "security") {
     return null;
   }
 
   const zoneName = formatZone(profile.currentZone);
   let primaryDuty = "Assist fans and monitor crowd flow.";
-  let keyPhrases: string[] = ["How can I help you?", "The nearest restroom is that way."];
+  let keyPhrases: string[] = [
+    "How can I help you?",
+    "The nearest restroom is that way.",
+  ];
   let escalationProtocol = "Contact your Zone Supervisor via radio channel 4.";
 
   // Phase-specific adjustments
   if (state.matchPhase === "pre_match") {
     primaryDuty = "Direct fans to their seats and manage turnstile queues.";
   } else if (state.matchPhase === "half_time") {
-    primaryDuty = "Monitor concourse congestion and direct fans to shorter food lines.";
+    primaryDuty =
+      "Monitor concourse congestion and direct fans to shorter food lines.";
   } else if (state.matchPhase === "post_match") {
-    primaryDuty = "Facilitate safe and orderly egress. Direct fans to nearest exits.";
+    primaryDuty =
+      "Facilitate safe and orderly egress. Direct fans to nearest exits.";
   }
 
   // Role-specific adjustments
@@ -49,7 +60,10 @@ export function generateShiftBriefing(profile: UserProfile, state: StadiumState)
   }
 
   return {
-    roleName: profile.role === "security" ? "Security Officer" : "Guest Services Volunteer",
+    roleName:
+      profile.role === "security"
+        ? "Security Officer"
+        : "Guest Services Volunteer",
     location: zoneName,
     primaryDuty,
     keyPhrases,

@@ -17,56 +17,67 @@ interface IncidentTemplate {
 const INCIDENT_TEMPLATES: readonly IncidentTemplate[] = [
   {
     title: "Medical: Fan Dehydration",
-    description: "Fan in Section 112 reporting dizziness and dehydration symptoms. First aid requested.",
+    description:
+      "Fan in Section 112 reporting dizziness and dehydration symptoms. First aid requested.",
     severity: INCIDENT_SEVERITY.HIGH,
     zone: "south-lower",
   },
   {
     title: "Crowd Surge Warning",
-    description: "Density sensors detecting above-threshold crowding near Gate B. Staff rebalancing needed.",
+    description:
+      "Density sensors detecting above-threshold crowding near Gate B. Staff rebalancing needed.",
     severity: INCIDENT_SEVERITY.CRITICAL,
     zone: "east-lower",
   },
   {
     title: "Spill Cleanup Required",
-    description: "Large beverage spill on concourse walkway near food court. Slip hazard flagged.",
+    description:
+      "Large beverage spill on concourse walkway near food court. Slip hazard flagged.",
     severity: INCIDENT_SEVERITY.LOW,
     zone: "north-lower",
   },
   {
     title: "Unauthorized Area Access",
-    description: "Individual detected in restricted VIP corridor without credentials. Security dispatched.",
+    description:
+      "Individual detected in restricted VIP corridor without credentials. Security dispatched.",
     severity: INCIDENT_SEVERITY.MEDIUM,
     zone: "vip-suites",
   },
   {
     title: "Restroom Out of Service",
-    description: "Restroom B plumbing failure in West Upper Bowl. Maintenance team notified.",
+    description:
+      "Restroom B plumbing failure in West Upper Bowl. Maintenance team notified.",
     severity: INCIDENT_SEVERITY.LOW,
     zone: "west-upper",
   },
   {
     title: "Lost Child Report",
-    description: "Parent reporting a lost 7-year-old near Section 224. Child wearing a blue Argentina jersey.",
+    description:
+      "Parent reporting a lost 7-year-old near Section 224. Child wearing a blue Argentina jersey.",
     severity: INCIDENT_SEVERITY.CRITICAL,
     zone: "north-upper",
   },
   {
     title: "Altercation Between Fans",
-    description: "Verbal altercation escalating in South Upper Bowl, Row 15. Security intervention needed.",
+    description:
+      "Verbal altercation escalating in South Upper Bowl, Row 15. Security intervention needed.",
     severity: INCIDENT_SEVERITY.HIGH,
     zone: "south-upper",
   },
   {
     title: "Power Outage: Merchandise Stand",
-    description: "Electrical fault affecting POS terminals at East Lower merchandise kiosk.",
+    description:
+      "Electrical fault affecting POS terminals at East Lower merchandise kiosk.",
     severity: INCIDENT_SEVERITY.MEDIUM,
     zone: "east-lower",
   },
 ];
 
 /** Generate a set of mock incidents with timestamps */
-export function generateIncidents(count: number = 5, seed: number = 42): readonly Incident[] {
+export function generateIncidents(
+  count: number = 5,
+  seed: number = 42,
+): readonly Incident[] {
   const now = Date.now();
   const incidents: Incident[] = [];
 
@@ -93,7 +104,8 @@ export function generateIncidents(count: number = 5, seed: number = 42): readonl
       status,
       zoneId: template.zone,
       reportedAt: timestamp,
-      assignedTo: status !== INCIDENT_STATUS.OPEN ? `STAFF-${String(100 + i)}` : null,
+      assignedTo:
+        status !== INCIDENT_STATUS.OPEN ? `STAFF-${String(100 + i)}` : null,
     });
   }
 

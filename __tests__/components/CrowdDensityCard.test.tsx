@@ -25,7 +25,7 @@ describe("CrowdDensityCard", () => {
     ];
 
     render(<CrowdDensityCard crowdReport={mockReport} />);
-    
+
     expect(screen.getAllByText("North Stand (Lower)")).toHaveLength(2);
     expect(screen.getByText("8,500 / 10,000")).toBeTruthy();
     expect(screen.getAllByText("South Stand (Upper)")).toHaveLength(2);

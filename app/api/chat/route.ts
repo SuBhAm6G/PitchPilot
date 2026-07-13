@@ -9,7 +9,9 @@ import { chatRequestSchema } from "@/lib/schemas";
 import { generateChatResponse } from "@/lib/aiService";
 import type { ChatResponse } from "@/lib/types";
 
-export async function POST(request: Request): Promise<NextResponse<ChatResponse | { error: string }>> {
+export async function POST(
+  request: Request,
+): Promise<NextResponse<ChatResponse | { error: string }>> {
   try {
     const body: unknown = await request.json();
 
@@ -18,13 +20,17 @@ export async function POST(request: Request): Promise<NextResponse<ChatResponse 
     if (!parseResult.success) {
       return NextResponse.json(
         { error: "Invalid request format. Please check your input." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const { message, userProfile, stadiumState } = parseResult.data;
 
-    const response = await generateChatResponse(message, userProfile, stadiumState);
+    const response = await generateChatResponse(
+      message,
+      userProfile,
+      stadiumState,
+    );
 
     return NextResponse.json(response, {
       headers: { "X-RateLimit-Policy": "60;w=60" },
@@ -33,7 +39,7 @@ export async function POST(request: Request): Promise<NextResponse<ChatResponse 
     console.error("Chat API error:", error);
     return NextResponse.json(
       { error: "An error occurred processing your request. Please try again." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

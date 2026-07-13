@@ -15,11 +15,16 @@ async function main() {
 
   // First validate as stringified-parsed JSON like an API would receive
   const jsonParsedState = JSON.parse(JSON.stringify(stadiumState));
-  
-  const parseResult = insightsRequestSchema.safeParse({ stadiumState: jsonParsedState });
+
+  const parseResult = insightsRequestSchema.safeParse({
+    stadiumState: jsonParsedState,
+  });
 
   if (!parseResult.success) {
-    console.error("Validation failed!", JSON.stringify(parseResult.error.format(), null, 2));
+    console.error(
+      "Validation failed!",
+      JSON.stringify(parseResult.error.format(), null, 2),
+    );
   } else {
     console.log("Validation succeeded!");
   }

@@ -25,7 +25,8 @@ export default function ProgressBar({
   colorClass,
   showPercentage = true,
 }: ProgressBarProps) {
-  const percentage = max > 0 ? Math.min(Math.round((value / max) * 100), 100) : 0;
+  const percentage =
+    max > 0 ? Math.min(Math.round((value / max) * 100), 100) : 0;
   const resolvedColor = colorClass ?? getColorClass(percentage);
 
   return (

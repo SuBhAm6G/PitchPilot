@@ -14,9 +14,30 @@ const mockMatchState: MatchState = {
   awayScore: 1,
   currentMinute: 67,
   events: [
-    { id: "e1", minute: 14, type: "goal", team: "home", playerName: "Pulisic", description: "Free kick from 25 yards." },
-    { id: "e2", minute: 38, type: "yellow_card", team: "away", playerName: "Lozano", description: "Dangerous tackle." },
-    { id: "e3", minute: 55, type: "goal", team: "home", playerName: "McKennie", description: "Header from corner." },
+    {
+      id: "e1",
+      minute: 14,
+      type: "goal",
+      team: "home",
+      playerName: "Pulisic",
+      description: "Free kick from 25 yards.",
+    },
+    {
+      id: "e2",
+      minute: 38,
+      type: "yellow_card",
+      team: "away",
+      playerName: "Lozano",
+      description: "Dangerous tackle.",
+    },
+    {
+      id: "e3",
+      minute: 55,
+      type: "goal",
+      team: "home",
+      playerName: "McKennie",
+      description: "Header from corner.",
+    },
   ],
 };
 

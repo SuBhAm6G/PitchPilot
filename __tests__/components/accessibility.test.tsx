@@ -18,7 +18,14 @@ const mockMatchState: MatchState = {
 };
 
 const mockItems: ItineraryItem[] = [
-  { id: "itin-1", time: "Now", action: "Enter Stadium", reason: "Gates are open.", priority: "now", icon: "map" },
+  {
+    id: "itin-1",
+    time: "Now",
+    action: "Enter Stadium",
+    reason: "Gates are open.",
+    priority: "now",
+    icon: "map",
+  },
 ];
 
 describe("Accessibility (A11y) E2E Tests", () => {

@@ -19,7 +19,13 @@ const zoneIdSchema = z.enum([
   "vip-suites",
 ]);
 
-const userRoleSchema = z.enum(["fan", "staff", "security", "medical"]);
+const userRoleSchema = z.enum([
+  "fan",
+  "staff",
+  "security",
+  "medical",
+  "organizer",
+]);
 
 const venueTypeSchema = z.enum([
   "food_court",
@@ -166,6 +172,7 @@ export const userProfileSchema = z.object({
   name: z.string().min(1),
   role: userRoleSchema,
   currentZone: zoneIdSchema,
+  stadiumId: z.string().min(1),
   seatNumber: z.string().optional(),
   preferredLanguage: z.string().min(2),
   accessibilityNeeds: accessibilityNeedsSchema,
@@ -243,7 +250,7 @@ export const llmResponseSchema = z.object({
       message: z.string().min(1),
       priority: recommendationPrioritySchema,
       icon: recommendationIconSchema,
-    })
+    }),
   ),
 });
 
@@ -259,7 +266,7 @@ export const stadiumApiResponseSchema = z.object({
       densityLevel: z.enum(["low", "moderate", "high", "critical"]),
       currentOccupancy: z.number().int().nonnegative(),
       maxCapacity: z.number().int().positive(),
-    })
+    }),
   ),
   totalOccupancy: z.number().int().nonnegative(),
   totalCapacity: z.number().int().positive(),

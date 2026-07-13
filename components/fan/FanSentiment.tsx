@@ -6,7 +6,9 @@ interface FanSentimentProps {
   readonly sentiment: SentimentScore;
 }
 
-const FanSentiment = memo(function FanSentiment({ sentiment }: FanSentimentProps) {
+const FanSentiment = memo(function FanSentiment({
+  sentiment,
+}: FanSentimentProps) {
   if (!sentiment) return null;
 
   // Compute color based on level
@@ -23,7 +25,9 @@ const FanSentiment = memo(function FanSentiment({ sentiment }: FanSentimentProps
         </h3>
         <p className="mt-1 font-medium">{sentiment.label}</p>
       </div>
-      <div className={`flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br shadow-lg ${colorClass} text-2xl`}>
+      <div
+        className={`flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br shadow-lg ${colorClass} text-2xl`}
+      >
         {sentiment.emoji}
       </div>
     </Card>

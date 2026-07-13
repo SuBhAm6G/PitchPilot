@@ -27,8 +27,15 @@ function getWaitColor(minutes: number): string {
   return "text-red-400";
 }
 
-export default function WaitTimeDisplay({ venues, userZone }: WaitTimeDisplayProps) {
-  const primaryTypes: VenueType[] = [VENUE_TYPES.FOOD_COURT, VENUE_TYPES.RESTROOM, VENUE_TYPES.MERCHANDISE];
+export default function WaitTimeDisplay({
+  venues,
+  userZone,
+}: WaitTimeDisplayProps) {
+  const primaryTypes: VenueType[] = [
+    VENUE_TYPES.FOOD_COURT,
+    VENUE_TYPES.RESTROOM,
+    VENUE_TYPES.MERCHANDISE,
+  ];
 
   return (
     <Card as="section">
@@ -55,9 +62,15 @@ export default function WaitTimeDisplay({ venues, userZone }: WaitTimeDisplayPro
               key={type}
               className="flex flex-col items-center rounded-xl bg-slate-800/30 p-4 text-center"
             >
-              <span className="text-2xl" aria-hidden="true">{meta.emoji}</span>
-              <p className="mt-2 text-xs font-medium text-slate-400">{meta.label}</p>
-              <p className={`mt-1 text-xl font-bold ${best ? getWaitColor(best.estimatedWaitMinutes) : "text-slate-600"}`}>
+              <span className="text-2xl" aria-hidden="true">
+                {meta.emoji}
+              </span>
+              <p className="mt-2 text-xs font-medium text-slate-400">
+                {meta.label}
+              </p>
+              <p
+                className={`mt-1 text-xl font-bold ${best ? getWaitColor(best.estimatedWaitMinutes) : "text-slate-600"}`}
+              >
                 {best ? `${String(best.estimatedWaitMinutes)}m` : "N/A"}
               </p>
             </div>

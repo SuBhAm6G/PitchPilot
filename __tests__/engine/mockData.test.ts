@@ -4,7 +4,11 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { generateStadiumState, generateZoneOccupancy, generateVenues } from "@/lib/data/mockStadiumData";
+import {
+  generateStadiumState,
+  generateZoneOccupancy,
+  generateVenues,
+} from "@/lib/data/mockStadiumData";
 import { generateIncidents } from "@/lib/data/mockIncidents";
 import { stadiumStateSchema, incidentSchema } from "@/lib/schemas";
 import { MATCH_PHASES, STADIUM_ZONES } from "@/lib/utils/constants";
@@ -19,7 +23,13 @@ describe("mockStadiumData integration", () => {
   });
 
   it("should produce valid zones for all match phases", () => {
-    const phases = [MATCH_PHASES.PRE_MATCH, MATCH_PHASES.FIRST_HALF, MATCH_PHASES.HALF_TIME, MATCH_PHASES.SECOND_HALF, MATCH_PHASES.POST_MATCH];
+    const phases = [
+      MATCH_PHASES.PRE_MATCH,
+      MATCH_PHASES.FIRST_HALF,
+      MATCH_PHASES.HALF_TIME,
+      MATCH_PHASES.SECOND_HALF,
+      MATCH_PHASES.POST_MATCH,
+    ];
     for (const phase of phases) {
       const zones = generateZoneOccupancy(phase, 42);
       expect(zones.length).toBe(STADIUM_ZONES.length);
@@ -31,7 +41,13 @@ describe("mockStadiumData integration", () => {
   });
 
   it("should produce valid venues for all match phases", () => {
-    const phases = [MATCH_PHASES.PRE_MATCH, MATCH_PHASES.FIRST_HALF, MATCH_PHASES.HALF_TIME, MATCH_PHASES.SECOND_HALF, MATCH_PHASES.POST_MATCH];
+    const phases = [
+      MATCH_PHASES.PRE_MATCH,
+      MATCH_PHASES.FIRST_HALF,
+      MATCH_PHASES.HALF_TIME,
+      MATCH_PHASES.SECOND_HALF,
+      MATCH_PHASES.POST_MATCH,
+    ];
     for (const phase of phases) {
       const venues = generateVenues(phase, 42);
       expect(venues.length).toBeGreaterThan(0);
@@ -44,7 +60,7 @@ describe("mockStadiumData integration", () => {
 
   it("should have consistent zone IDs across zones and venues", () => {
     const state = generateStadiumState(MATCH_PHASES.FIRST_HALF, 42);
-    const zoneIds = new Set(state.zones.map(z => z.id));
+    const zoneIds = new Set(state.zones.map((z) => z.id));
     for (const venue of state.venues) {
       expect(zoneIds.has(venue.zoneId)).toBe(true);
     }
@@ -61,7 +77,9 @@ describe("mockStadiumData integration", () => {
     const state1 = generateStadiumState(MATCH_PHASES.FIRST_HALF, 42);
     const state2 = generateStadiumState(MATCH_PHASES.FIRST_HALF, 99);
     // At least some zones should have different occupancy
-    const diff = state1.zones.some((z, i) => z.currentOccupancy !== state2.zones[i]?.currentOccupancy);
+    const diff = state1.zones.some(
+      (z, i) => z.currentOccupancy !== state2.zones[i]?.currentOccupancy,
+    );
     expect(diff).toBe(true);
   });
 });

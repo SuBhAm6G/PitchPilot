@@ -27,16 +27,22 @@ const PRIORITY_STYLES: Record<number, string> = {
   4: "border-red-500/30 bg-red-500/5",
 };
 
-export default function RecommendationCard({ recommendation }: RecommendationCardProps) {
+export default function RecommendationCard({
+  recommendation,
+}: RecommendationCardProps) {
   const icon = ICON_MAP[recommendation.icon] ?? "ℹ️";
   const borderStyle = PRIORITY_STYLES[recommendation.priority] ?? "";
 
   return (
     <Card as="article" className={`${borderStyle} hover:scale-[1.01]`}>
       <div className="flex items-start gap-3">
-        <span className="text-2xl" aria-hidden="true">{icon}</span>
+        <span className="text-2xl" aria-hidden="true">
+          {icon}
+        </span>
         <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-semibold text-white">{recommendation.title}</h3>
+          <h3 className="text-sm font-semibold text-white">
+            {recommendation.title}
+          </h3>
           <p className="mt-1 text-sm leading-relaxed text-slate-400">
             {recommendation.message}
           </p>

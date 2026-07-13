@@ -6,14 +6,23 @@ const baseProfile: UserProfile = {
   id: "fan-1",
   name: "Test Fan",
   role: "fan",
+  stadiumId: "metlife",
   currentZone: "north-lower",
   preferredLanguage: "en",
-  accessibilityNeeds: { wheelchairAccess: false, visualAssistance: false, hearingAssistance: false },
+  accessibilityNeeds: {
+    wheelchairAccess: false,
+    visualAssistance: false,
+    hearingAssistance: false,
+  },
 };
 
 describe("sustainabilityEngine", () => {
   it("should calculate zero savings for single driver", () => {
-    const profile = { ...baseProfile, travelMethod: "car" as const, groupSize: 1 };
+    const profile = {
+      ...baseProfile,
+      travelMethod: "car" as const,
+      groupSize: 1,
+    };
     const metrics = calculateSustainability(profile);
     expect(metrics.co2SavedKg).toBe(0);
     expect(metrics.badgeEarned).toBe(false);
@@ -36,7 +45,11 @@ describe("sustainabilityEngine", () => {
   });
 
   it("should calculate savings for carpooling", () => {
-    const profile = { ...baseProfile, travelMethod: "car" as const, groupSize: 4 };
+    const profile = {
+      ...baseProfile,
+      travelMethod: "car" as const,
+      groupSize: 4,
+    };
     const metrics = calculateSustainability(profile);
     expect(metrics.co2SavedKg).toBeGreaterThan(0);
     expect(metrics.badgeEarned).toBe(true);

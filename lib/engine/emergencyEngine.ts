@@ -7,7 +7,7 @@ import type { ZoneId } from "@/lib/utils/constants";
  */
 export function getEvacuationRoute(
   userZoneId: ZoneId,
-  stadiumState: StadiumState
+  stadiumState: StadiumState,
 ): EmergencyRoute {
   // Find incidents that are active and critical
   const criticalIncidentZones = stadiumState.incidents
@@ -26,7 +26,9 @@ export function getEvacuationRoute(
   ];
 
   if (isZoneCompromised) {
-    instructions.unshift("URGENT: Your zone has a reported incident. Evacuate immediately.");
+    instructions.unshift(
+      "URGENT: Your zone has a reported incident. Evacuate immediately.",
+    );
   }
 
   return {

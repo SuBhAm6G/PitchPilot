@@ -16,7 +16,11 @@ interface ChatPanelProps {
   readonly initialMessage?: string;
 }
 
-export default function ChatPanel({ userProfile, stadiumState, initialMessage }: ChatPanelProps) {
+export default function ChatPanel({
+  userProfile,
+  stadiumState,
+  initialMessage,
+}: ChatPanelProps) {
   const [messages, setMessages] = useState<readonly ChatMessage[]>([
     {
       id: "welcome",
@@ -36,57 +40,63 @@ export default function ChatPanel({ userProfile, stadiumState, initialMessage }:
     scrollToBottom();
   }, [messages, scrollToBottom]);
 
-  const handleSend = useCallback(async (content: string) => {
-    if (!stadiumState) return;
+  const handleSend = useCallback(
+    async (content: string) => {
+      if (!stadiumState) return;
 
-    const userMessage: ChatMessage = {
-      id: `user-${Date.now().toString()}`,
-      role: "user",
-      content,
-      timestamp: new Date().toISOString(),
-    };
+      const userMessage: ChatMessage = {
+        id: `user-${Date.now().toString()}`,
+        role: "user",
+        content,
+        timestamp: new Date().toISOString(),
+      };
 
-    setMessages((prev) => [...prev, userMessage]);
-    setIsLoading(true);
+      setMessages((prev) => [...prev, userMessage]);
+      setIsLoading(true);
 
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: content,
-          userProfile,
-          stadiumState,
-        }),
-      });
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: content,
+            userProfile,
+            stadiumState,
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${String(response.status)}`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${String(response.status)}`);
+        }
+
+        const data: { reply?: string; error?: string } = await response.json();
+
+        const assistantMessage: ChatMessage = {
+          id: `assistant-${Date.now().toString()}`,
+          role: "assistant",
+          content:
+            data.reply ??
+            "I apologize, I couldn't process your request. Please try again.",
+          timestamp: new Date().toISOString(),
+        };
+
+        setMessages((prev) => [...prev, assistantMessage]);
+      } catch {
+        const errorMessage: ChatMessage = {
+          id: `error-${Date.now().toString()}`,
+          role: "assistant",
+          content:
+            "Sorry, I encountered an error. Please try again in a moment.",
+          timestamp: new Date().toISOString(),
+        };
+
+        setMessages((prev) => [...prev, errorMessage]);
+      } finally {
+        setIsLoading(false);
       }
-
-      const data: { reply?: string; error?: string } = await response.json();
-
-      const assistantMessage: ChatMessage = {
-        id: `assistant-${Date.now().toString()}`,
-        role: "assistant",
-        content: data.reply ?? "I apologize, I couldn't process your request. Please try again.",
-        timestamp: new Date().toISOString(),
-      };
-
-      setMessages((prev) => [...prev, assistantMessage]);
-    } catch {
-      const errorMessage: ChatMessage = {
-        id: `error-${Date.now().toString()}`,
-        role: "assistant",
-        content: "Sorry, I encountered an error. Please try again in a moment.",
-        timestamp: new Date().toISOString(),
-      };
-
-      setMessages((prev) => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [stadiumState, userProfile]);
+    },
+    [stadiumState, userProfile],
+  );
 
   const initialSentRef = useRef(false);
 
@@ -105,7 +115,9 @@ export default function ChatPanel({ userProfile, stadiumState, initialMessage }:
     >
       {/* Header */}
       <div className="border-b border-white/10 px-5 py-3">
-        <h2 className="text-sm font-semibold text-white">PitchPilot AI Assistant</h2>
+        <h2 className="text-sm font-semibold text-white">
+          PitchPilot AI Assistant
+        </h2>
         <p className="text-xs text-slate-500">Powered by Google Gemini</p>
       </div>
 
@@ -123,9 +135,21 @@ export default function ChatPanel({ userProfile, stadiumState, initialMessage }:
         {isLoading && (
           <div className="flex justify-start" aria-label="Assistant is typing">
             <div className="flex items-center gap-1 rounded-2xl bg-slate-700/50 px-4 py-3 rounded-bl-md">
-              <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400" style={{ animationDelay: "0ms" }} aria-hidden="true" />
-              <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400" style={{ animationDelay: "150ms" }} aria-hidden="true" />
-              <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400" style={{ animationDelay: "300ms" }} aria-hidden="true" />
+              <span
+                className="h-2 w-2 animate-bounce rounded-full bg-slate-400"
+                style={{ animationDelay: "0ms" }}
+                aria-hidden="true"
+              />
+              <span
+                className="h-2 w-2 animate-bounce rounded-full bg-slate-400"
+                style={{ animationDelay: "150ms" }}
+                aria-hidden="true"
+              />
+              <span
+                className="h-2 w-2 animate-bounce rounded-full bg-slate-400"
+                style={{ animationDelay: "300ms" }}
+                aria-hidden="true"
+              />
             </div>
           </div>
         )}

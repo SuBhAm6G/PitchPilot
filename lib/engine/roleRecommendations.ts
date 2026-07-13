@@ -20,7 +20,7 @@ import { makeRecommendation } from "@/lib/engine/contextDecisionEngine";
 /** Get role-specific recommendations for the given user */
 export function getRoleRecommendations(
   profile: UserProfile,
-  state: StadiumState
+  state: StadiumState,
 ): readonly ContextRecommendation[] {
   if (profile.role === USER_ROLES.FAN) {
     return getFanRecommendations(profile, state);
@@ -34,7 +34,7 @@ export function getRoleRecommendations(
 /** Fan-specific recommendations based on zone density and nearby venues */
 function getFanRecommendations(
   profile: UserProfile,
-  state: StadiumState
+  state: StadiumState,
 ): readonly ContextRecommendation[] {
   const results: ContextRecommendation[] = [];
   const userZone = state.zones.find((z) => z.id === profile.currentZone);
@@ -49,14 +49,18 @@ function getFanRecommendations(
           "Your Zone is Crowded",
           `${userZone.name} is at ${Math.round(density * 100)}% capacity. Consider moving to a less busy area.`,
           RECOMMENDATION_PRIORITY.HIGH,
-          "users"
-        )
+          "users",
+        ),
       );
     }
   }
 
   // Best food option (shortest wait in or near user's zone)
-  const nearestFood = findBestVenue(state.venues, profile.currentZone, VENUE_TYPES.FOOD_COURT);
+  const nearestFood = findBestVenue(
+    state.venues,
+    profile.currentZone,
+    VENUE_TYPES.FOOD_COURT,
+  );
   if (nearestFood) {
     results.push(
       makeRecommendation(
@@ -64,13 +68,17 @@ function getFanRecommendations(
         "Nearest Food Option",
         `${nearestFood.name} has a ~${String(nearestFood.estimatedWaitMinutes)} min wait (queue: ${String(nearestFood.currentQueueLength)} people).`,
         RECOMMENDATION_PRIORITY.MEDIUM,
-        "utensils"
-      )
+        "utensils",
+      ),
     );
   }
 
   // Best restroom option
-  const nearestRestroom = findBestVenue(state.venues, profile.currentZone, VENUE_TYPES.RESTROOM);
+  const nearestRestroom = findBestVenue(
+    state.venues,
+    profile.currentZone,
+    VENUE_TYPES.RESTROOM,
+  );
   if (nearestRestroom) {
     results.push(
       makeRecommendation(
@@ -78,8 +86,8 @@ function getFanRecommendations(
         "Nearest Restroom",
         `${nearestRestroom.name} — ~${String(nearestRestroom.estimatedWaitMinutes)} min wait.`,
         RECOMMENDATION_PRIORITY.MEDIUM,
-        "toilet"
-      )
+        "toilet",
+      ),
     );
   }
 
@@ -89,31 +97,33 @@ function getFanRecommendations(
 /** Staff-specific recommendations based on zone density and incidents */
 function getStaffRecommendations(
   profile: UserProfile,
-  state: StadiumState
+  state: StadiumState,
 ): readonly ContextRecommendation[] {
   const results: ContextRecommendation[] = [];
 
   // Critical zone alerts
   const criticalZones = state.zones.filter(
-    (z) => z.currentOccupancy / z.maxCapacity >= CROWD_DENSITY_LEVELS.CRITICAL
+    (z) => z.currentOccupancy / z.maxCapacity >= CROWD_DENSITY_LEVELS.CRITICAL,
   );
 
   for (const zone of criticalZones) {
-    const density = Math.round((zone.currentOccupancy / zone.maxCapacity) * 100);
+    const density = Math.round(
+      (zone.currentOccupancy / zone.maxCapacity) * 100,
+    );
     results.push(
       makeRecommendation(
         "crowd_alert",
         `CRITICAL: ${zone.name}`,
         `Zone at ${String(density)}% capacity. Immediate crowd management required.`,
         RECOMMENDATION_PRIORITY.URGENT,
-        "alert"
-      )
+        "alert",
+      ),
     );
   }
 
   // Open incidents in user's zone
   const zoneIncidents = state.incidents.filter(
-    (inc) => inc.zoneId === profile.currentZone && inc.status !== "resolved"
+    (inc) => inc.zoneId === profile.currentZone && inc.status !== "resolved",
   );
 
   for (const incident of zoneIncidents) {
@@ -125,8 +135,8 @@ function getStaffRecommendations(
         incident.severity >= 3
           ? RECOMMENDATION_PRIORITY.URGENT
           : RECOMMENDATION_PRIORITY.MEDIUM,
-        "alert"
-      )
+        "alert",
+      ),
     );
   }
 
@@ -134,7 +144,7 @@ function getStaffRecommendations(
   const highDensityZones = state.zones.filter(
     (z) =>
       z.currentOccupancy / z.maxCapacity >= CROWD_DENSITY_LEVELS.HIGH &&
-      z.currentOccupancy / z.maxCapacity < CROWD_DENSITY_LEVELS.CRITICAL
+      z.currentOccupancy / z.maxCapacity < CROWD_DENSITY_LEVELS.CRITICAL,
   );
 
   if (highDensityZones.length > 0) {
@@ -145,8 +155,8 @@ function getStaffRecommendations(
         "Bottleneck Warning",
         `High density detected in: ${zoneNames}. Consider proactive crowd flow measures.`,
         RECOMMENDATION_PRIORITY.HIGH,
-        "users"
-      )
+        "users",
+      ),
     );
   }
 
@@ -157,11 +167,9 @@ function getStaffRecommendations(
 export function findBestVenue(
   venues: readonly Venue[],
   userZone: string,
-  venueType: string
+  venueType: string,
 ): Venue | undefined {
-  const matchingVenues = venues.filter(
-    (v) => v.type === venueType && v.isOpen
-  );
+  const matchingVenues = venues.filter((v) => v.type === venueType && v.isOpen);
 
   if (matchingVenues.length === 0) return undefined;
 

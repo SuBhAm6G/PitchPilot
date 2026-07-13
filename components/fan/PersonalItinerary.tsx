@@ -6,7 +6,9 @@ interface PersonalItineraryProps {
   readonly items: readonly ItineraryItem[];
 }
 
-const PersonalItinerary = memo(function PersonalItinerary({ items }: PersonalItineraryProps) {
+const PersonalItinerary = memo(function PersonalItinerary({
+  items,
+}: PersonalItineraryProps) {
   if (!items || items.length === 0) return null;
 
   return (
@@ -28,9 +30,15 @@ const PersonalItinerary = memo(function PersonalItinerary({ items }: PersonalIti
           >
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <span className={`text-xs font-bold uppercase tracking-wider ${
-                  item.priority === "now" ? "text-emerald-400" : item.priority === "soon" ? "text-amber-400" : "text-slate-400"
-                }`}>
+                <span
+                  className={`text-xs font-bold uppercase tracking-wider ${
+                    item.priority === "now"
+                      ? "text-emerald-400"
+                      : item.priority === "soon"
+                        ? "text-amber-400"
+                        : "text-slate-400"
+                  }`}
+                >
                   {item.time}
                 </span>
                 <span className="text-sm font-semibold">{item.action}</span>

@@ -1,11 +1,17 @@
-import type { MatchState, ContextRecommendation, UserProfile } from "@/lib/types";
+import type {
+  MatchState,
+  ContextRecommendation,
+} from "@/lib/types";
 
 /**
  * Deterministic engine for match-related recommendations.
+ * Analyzes recent match events (goals, half-time) to generate safety or excitement alerts.
+ *
+ * @param matchState - The current state of the match including score and recent events
+ * @returns An array of context-aware match recommendations
  */
 export function getMatchRecommendations(
   matchState: MatchState,
-  _profile: UserProfile
 ): readonly ContextRecommendation[] {
   const recs: ContextRecommendation[] = [];
 
@@ -17,7 +23,7 @@ export function getMatchRecommendations(
 
   // Only show recommendations for events that happened in the last 3 minutes
   const isRecent = matchState.currentMinute - latestEvent.minute <= 3;
-  
+
   if (!isRecent) return recs;
 
   if (latestEvent.type === "goal") {
@@ -36,7 +42,8 @@ export function getMatchRecommendations(
       id: `match-ht-${latestEvent.id}`,
       type: "crowd_alert",
       title: "Half-time Whistle",
-      message: "Concourses will be exceptionally busy now. Check wait times before leaving your seat.",
+      message:
+        "Concourses will be exceptionally busy now. Check wait times before leaving your seat.",
       priority: 3,
       icon: "alert",
     });

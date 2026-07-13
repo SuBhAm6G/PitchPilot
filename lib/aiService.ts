@@ -2,7 +2,13 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { llmResponseSchema } from "@/lib/schemas";
 import { getPersonalizedRecommendations } from "@/lib/engine/contextDecisionEngine";
 import { CHAT_CONFIG } from "@/lib/utils/constants";
-import type { ChatResponse, ContextRecommendation, UserProfile, StadiumState, Incident } from "@/lib/types";
+import type {
+  ChatResponse,
+  ContextRecommendation,
+  UserProfile,
+  StadiumState,
+  Incident,
+} from "@/lib/types";
 
 /**
  * Hardened AI Gateway that guarantees a response even if the LLM fails,
@@ -11,7 +17,7 @@ import type { ChatResponse, ContextRecommendation, UserProfile, StadiumState, In
 export async function generateChatResponse(
   message: string,
   userProfile: UserProfile,
-  stadiumState: StadiumState
+  stadiumState: StadiumState,
 ): Promise<ChatResponse> {
   const contextRecs = getPersonalizedRecommendations(userProfile, stadiumState);
   const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
@@ -24,8 +30,12 @@ export async function generateChatResponse(
   }
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-  const systemPrompt = buildSystemPrompt(userProfile, stadiumState, contextRecs);
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const systemPrompt = buildSystemPrompt(
+    userProfile,
+    stadiumState,
+    contextRecs,
+  );
 
   try {
     // 5 second timeout for the LLM call
@@ -40,7 +50,7 @@ export async function generateChatResponse(
     ]);
 
     const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("LLM Timeout")), 5000)
+      setTimeout(() => reject(new Error("LLM Timeout")), 5000),
     );
 
     const result = await Promise.race([generatePromise, timeoutPromise]);
@@ -59,7 +69,10 @@ export async function generateChatResponse(
       recommendations: contextRecs.slice(0, 3),
     };
   } catch (error) {
-    console.warn("LLM Gateway fallback triggered:", error instanceof Error ? error.message : error);
+    console.warn(
+      "LLM Gateway fallback triggered:",
+      error instanceof Error ? error.message : error,
+    );
     return {
       reply: generateFallbackReply(message, contextRecs, stadiumState),
       recommendations: contextRecs.slice(0, 3),
@@ -70,16 +83,22 @@ export async function generateChatResponse(
 function buildSystemPrompt(
   userProfile: UserProfile,
   stadiumState: StadiumState,
-  recommendations: readonly ContextRecommendation[]
+  recommendations: readonly ContextRecommendation[],
 ): string {
   const recSummary = recommendations
     .slice(0, 5)
     .map((r) => `- [${r.type}] ${r.title}: ${r.message}`)
     .join("\n");
 
-  const weatherStr = stadiumState.weather ? `${stadiumState.weather.temperatureCelsius}°C, ${stadiumState.weather.condition}` : 'Unknown';
-  const matchStr = stadiumState.matchState ? `${stadiumState.matchState.homeTeam} ${stadiumState.matchState.homeScore} - ${stadiumState.matchState.awayScore} ${stadiumState.matchState.awayTeam} (${stadiumState.matchState.currentMinute}')` : 'Not Started';
-  const incidentsCount = stadiumState.incidents.filter((i: Incident) => i.status !== "resolved").length;
+  const weatherStr = stadiumState.weather
+    ? `${stadiumState.weather.temperatureCelsius}°C, ${stadiumState.weather.condition}`
+    : "Unknown";
+  const matchStr = stadiumState.matchState
+    ? `${stadiumState.matchState.homeTeam} ${stadiumState.matchState.homeScore} - ${stadiumState.matchState.awayScore} ${stadiumState.matchState.awayTeam} (${stadiumState.matchState.currentMinute}')`
+    : "Not Started";
+  const incidentsCount = stadiumState.incidents.filter(
+    (i: Incident) => i.status !== "resolved",
+  ).length;
 
   return `You are ${CHAT_CONFIG.SYSTEM_PROMPT_ROLE}.
 
@@ -104,9 +123,7 @@ Instructions:
 Respond naturally to the user's message.`;
 }
 
-function tryParseLLMResponse(
-  text: string
-): ChatResponse | null {
+function tryParseLLMResponse(text: string): ChatResponse | null {
   try {
     const jsonMatch = text.match(/```json\s*([\s\S]*?)\s*```/);
     const jsonString = jsonMatch ? jsonMatch[1] : text;
@@ -133,7 +150,7 @@ function tryParseLLMResponse(
 export function generateFallbackReply(
   message: string,
   recommendations: readonly ContextRecommendation[],
-  stadiumState: StadiumState
+  stadiumState: StadiumState,
 ): string {
   const lowerMessage = message.toLowerCase();
 

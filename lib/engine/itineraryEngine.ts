@@ -1,12 +1,15 @@
-import type { ItineraryItem, StadiumState, UserProfile } from "@/lib/types";
+import type { ItineraryItem, StadiumState } from "@/lib/types";
 import { UI_WARNING_THRESHOLDS } from "@/lib/utils/constants";
 
 /**
  * Deterministic engine to generate a personalized match-day itinerary.
+ * Uses the current match phase and stadium queues to calculate the next best action.
+ *
+ * @param stadiumState - The current operational state of the stadium
+ * @returns An array of prioritized itinerary items for the user
  */
 export function generateItinerary(
   stadiumState: StadiumState,
-  _profile: UserProfile
 ): readonly ItineraryItem[] {
   const items: ItineraryItem[] = [];
   const phase = stadiumState.matchPhase;
@@ -20,11 +23,15 @@ export function generateItinerary(
       priority: "now",
       icon: "map",
     });
-    
+
     // Check wait times for food
-    const foodVenues = stadiumState.venues.filter(v => v.type === "food_court");
-    const longWait = foodVenues.some(v => v.estimatedWaitMinutes > UI_WARNING_THRESHOLDS.WAIT_TIME_MINUTES);
-    
+    const foodVenues = stadiumState.venues.filter(
+      (v) => v.type === "food_court",
+    );
+    const longWait = foodVenues.some(
+      (v) => v.estimatedWaitMinutes > UI_WARNING_THRESHOLDS.WAIT_TIME_MINUTES,
+    );
+
     if (longWait) {
       items.push({
         id: "itin-2",

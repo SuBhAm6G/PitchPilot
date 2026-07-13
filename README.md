@@ -42,20 +42,28 @@ PitchPilot addresses two critical stakeholder needs at FIFA World Cup 2026 venue
 
 ## How This Solves the Problem Statement
 
-The challenge states: *"Create a GenAI-powered solution to optimize stadium operations and enhance the FIFA World Cup 2026 experience through intelligent, real-time assistance."*
+The challenge states: _"Create a GenAI-powered solution to optimize stadium operations and enhance the FIFA World Cup 2026 experience through intelligent, real-time assistance."_
 
 ### "GenAI-powered solution"
+
 - **Gemini 2.5 Flash** powers the AI chat with full match, navigation, weather, and emergency context (`app/api/chat/route.ts`)
 - **Proactive AI Briefings** (`components/dashboard/ProactiveInsightBrief.tsx`) autonomously identify operational bottlenecks via `app/api/insights/route.ts`
 - **AI Staff Copilot** (`components/dashboard/StaffCopilot.tsx`) provides decision support with actionable recommendations
 
 ### "Optimize stadium operations"
+
+- **Multi-Stadium Support** — Full scale support for all 16 FIFA World Cup 2026 Host Stadiums (Azteca, SoFi, MetLife, etc.)
+- **New 'Organizer' Role** — Specialized global overview access for tournament organizers
 - **9-Zone Crowd Analytics** (`lib/engine/crowdAnalyticsEngine.ts`) with density heatmap, bottleneck detection, and zone-by-zone monitoring
 - **Predictive Congestion** (`components/dashboard/PredictiveCongestion.tsx`) forecasts zone occupancy 15 minutes ahead
 - **Incident Management** (`lib/engine/incidentEngine.ts`) with priority sorting, staff dispatch, and zone-aware response times
 - **Graphical Stadium Map** (`components/dashboard/GraphicalStadiumMap.tsx`) with real-time SVG color-coding of 9 zones
 
 ### "Enhance the FIFA World Cup 2026 experience"
+
+- **Multilingual Support** — Fan UI and AI Chat adapt to English, Spanish, French, and Arabic
+- **SOS Emergency Broadcast** — Instant emergency assistance routing right from the Fan Hub
+- **Sustainability / Green Travel Badge** (`components/fan/GreenTravelBadge.tsx`) — Rewards users taking public transit
 - **Live Match Timeline** (`components/fan/MatchTimeline.tsx`) with goals, cards, VAR reviews — the AI knows football
 - **Personal Itinerary** (`components/fan/PersonalItinerary.tsx`) — time-aware suggestions: "Kickoff in 25 min, grab food now"
 - **Fan Sentiment Meter** (`components/fan/FanSentiment.tsx`) — crowd excitement visualization
@@ -63,17 +71,20 @@ The challenge states: *"Create a GenAI-powered solution to optimize stadium oper
 - **8 Quick Actions** (`components/fan/QuickActions.tsx`) — food, restroom, wayfinding, merch, step-free routes, match stats, weather, report issue
 
 ### "Intelligent, real-time assistance"
+
 - **Dijkstra Navigation** (`lib/engine/navigationEngine.ts`) — "Take me to my seat" → step-by-step route with distance, time, landmarks
 - **Emergency Evacuation** (`lib/engine/emergencyEngine.ts`) — routing away from incident zones with avoidance logic
-- **Context-Aware Chat** — different responses for fans vs. staff, adapts to match phase, zone, and weather
+- **Context-Aware Chat** — different responses for fans vs. staff, adapts to match phase, zone, stadium, and weather
 - **Deterministic Offline Fallback** — full functionality without API key using engine-generated responses
 
 ### "Ability to build a smart, dynamic assistant"
+
 - **Deterministic Context Engine** (`lib/engine/contextDecisionEngine.ts`) — pure functions that map `UserProfile` + `StadiumState` → `ContextRecommendation[]`
 - **10 Pure Engines** — all business logic is testable, reproducible, and framework-agnostic
 - **Role-Adaptive UI** — Fan Hub vs. Ops Dashboard with different layouts, quick actions, and data views
 
 ### "Clean and maintainable code"
+
 - **146+ unit tests** with Vitest — every engine, every edge case, every boundary condition
 - **Strict TypeScript** — zero `any`, zero `eslint-disable`
 - **Zod validation** on all data boundaries (API input, LLM output, API response)
@@ -88,20 +99,21 @@ The challenge states: *"Create a GenAI-powered solution to optimize stadium oper
 
 PitchPilot's core intelligence lives in **10 pure, deterministic engines** inside `lib/engine/`, completely decoupled from the UI:
 
-| Engine | File | Responsibility |
-|--------|------|---------------|
+| Engine           | File                       | Responsibility                                                                                                                  |
+| ---------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | Context Decision | `contextDecisionEngine.ts` | Maps `UserProfile` + `StadiumState` → prioritized `ContextRecommendation[]` based on role, zone, match phase, and accessibility |
-| Crowd Analytics | `crowdAnalyticsEngine.ts` | Calculates zone density levels, identifies bottlenecks, computes total occupancy |
-| Wait Time | `waitTimeEngine.ts` | Estimates queue wait times using service-rate modeling, finds shortest queues |
-| Incident | `incidentEngine.ts` | Prioritizes incidents by severity/recency, assigns nearest available staff |
-| Match | `matchEngine.ts` | Generates match-context recommendations for goals, cards, half-time |
-| Navigation | `navigationEngine.ts` | Dijkstra's shortest-path routing between 9 stadium zones |
-| Emergency | `emergencyEngine.ts` | Evacuation routing with zone compromise detection and exit selection |
-| Itinerary | `itineraryEngine.ts` | Phase-aware personal match-day planning |
-| Weather | `weatherEngine.ts` | Temperature/condition-based advisories with gate recommendations |
-| Sentiment | `sentimentEngine.ts` | Crowd sentiment scoring from match events, phase, and incidents |
+| Crowd Analytics  | `crowdAnalyticsEngine.ts`  | Calculates zone density levels, identifies bottlenecks, computes total occupancy                                                |
+| Wait Time        | `waitTimeEngine.ts`        | Estimates queue wait times using service-rate modeling, finds shortest queues                                                   |
+| Incident         | `incidentEngine.ts`        | Prioritizes incidents by severity/recency, assigns nearest available staff                                                      |
+| Match            | `matchEngine.ts`           | Generates match-context recommendations for goals, cards, half-time                                                             |
+| Navigation       | `navigationEngine.ts`      | Dijkstra's shortest-path routing between 9 stadium zones                                                                        |
+| Emergency        | `emergencyEngine.ts`       | Evacuation routing with zone compromise detection and exit selection                                                            |
+| Itinerary        | `itineraryEngine.ts`       | Phase-aware personal match-day planning                                                                                         |
+| Weather          | `weatherEngine.ts`         | Temperature/condition-based advisories with gate recommendations                                                                |
+| Sentiment        | `sentimentEngine.ts`       | Crowd sentiment scoring from match events, phase, and incidents                                                                 |
 
 **Why this matters:**
+
 - All business logic is **unit-testable** with 146+ passing tests
 - Zero coupling to React — engines can be reused server-side, in workers, or in a mobile app
 - Every recommendation is **explainable** and **reproducible** given the same inputs
@@ -123,30 +135,33 @@ This prevents malformed LLM outputs, injection attacks, and type inconsistencies
 ## Feature Showcase
 
 ### Fan Experience Hub
-| Feature | Component | Engine |
-|---------|-----------|--------|
-| 🎯 **8 Quick Actions** | `QuickActions.tsx` | — |
-| ⚽ **Live Match Timeline** | `MatchTimeline.tsx` | `matchEngine.ts` |
-| 📋 **Personal Itinerary** | `PersonalItinerary.tsx` | `itineraryEngine.ts` |
-| ⛅ **Weather Advisory** | `WeatherBanner.tsx` | `weatherEngine.ts` |
-| 🔥 **Crowd Sentiment** | `FanSentiment.tsx` | `sentimentEngine.ts` |
-| 🚨 **Emergency Banner** | `EmergencyBanner.tsx` | `emergencyEngine.ts` |
-| 🍔 **Wait Time Display** | `WaitTimeDisplay.tsx` | `waitTimeEngine.ts` |
+
+| Feature                      | Component                | Engine                     |
+| ---------------------------- | ------------------------ | -------------------------- |
+| 🎯 **8 Quick Actions**       | `QuickActions.tsx`       | —                          |
+| ⚽ **Live Match Timeline**   | `MatchTimeline.tsx`      | `matchEngine.ts`           |
+| 📋 **Personal Itinerary**    | `PersonalItinerary.tsx`  | `itineraryEngine.ts`       |
+| ⛅ **Weather Advisory**      | `WeatherBanner.tsx`      | `weatherEngine.ts`         |
+| 🔥 **Crowd Sentiment**       | `FanSentiment.tsx`       | `sentimentEngine.ts`       |
+| 🚨 **Emergency Banner**      | `EmergencyBanner.tsx`    | `emergencyEngine.ts`       |
+| 🍔 **Wait Time Display**     | `WaitTimeDisplay.tsx`    | `waitTimeEngine.ts`        |
 | 💡 **Smart Recommendations** | `RecommendationCard.tsx` | `contextDecisionEngine.ts` |
 
 ### Operations Dashboard
-| Feature | Component | Engine |
-|---------|-----------|--------|
-| 🗺️ **Interactive Stadium Map** | `GraphicalStadiumMap.tsx` | `crowdAnalyticsEngine.ts` |
-| ⚡ **AI Staff Copilot** | `StaffCopilot.tsx` | `incidentEngine.ts` |
-| 📊 **Predictive Congestion** | `PredictiveCongestion.tsx` | `crowdAnalyticsEngine.ts` |
-| 📰 **Proactive AI Briefing** | `ProactiveInsightBrief.tsx` | Gemini 2.5 Flash |
-| 🏗️ **Zone Status Grid** | `ZoneStatusGrid.tsx` | `crowdAnalyticsEngine.ts` |
-| 📉 **Crowd Density Card** | `CrowdDensityCard.tsx` | `crowdAnalyticsEngine.ts` |
-| ⏱️ **Wait Time Card** | `WaitTimeCard.tsx` | `waitTimeEngine.ts` |
-| 🚨 **Incident Log** | `IncidentLog.tsx` | `incidentEngine.ts` |
+
+| Feature                        | Component                   | Engine                    |
+| ------------------------------ | --------------------------- | ------------------------- |
+| 🗺️ **Interactive Stadium Map** | `GraphicalStadiumMap.tsx`   | `crowdAnalyticsEngine.ts` |
+| ⚡ **AI Staff Copilot**        | `StaffCopilot.tsx`          | `incidentEngine.ts`       |
+| 📊 **Predictive Congestion**   | `PredictiveCongestion.tsx`  | `crowdAnalyticsEngine.ts` |
+| 📰 **Proactive AI Briefing**   | `ProactiveInsightBrief.tsx` | Gemini 2.5 Flash          |
+| 🏗️ **Zone Status Grid**        | `ZoneStatusGrid.tsx`        | `crowdAnalyticsEngine.ts` |
+| 📉 **Crowd Density Card**      | `CrowdDensityCard.tsx`      | `crowdAnalyticsEngine.ts` |
+| ⏱️ **Wait Time Card**          | `WaitTimeCard.tsx`          | `waitTimeEngine.ts`       |
+| 🚨 **Incident Log**            | `IncidentLog.tsx`           | `incidentEngine.ts`       |
 
 ### AI Chat Companion
+
 - Role-adaptive system prompt (fan vs. staff vs. security)
 - Full context injection: match score, weather, zone, incidents
 - Structured output parsing with Zod validation
@@ -212,15 +227,15 @@ graph TD
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | Next.js 16 (App Router, Turbopack) |
-| Language | TypeScript (strict mode, zero `any`) |
-| Styling | Tailwind CSS v4 |
-| AI | Google Gemini 2.5 Flash |
-| Validation | Zod v4 |
-| Testing | Vitest + React Testing Library + JSDOM |
-| Deployment | Vercel |
+| Layer      | Technology                             |
+| ---------- | -------------------------------------- |
+| Framework  | Next.js 16 (App Router, Turbopack)     |
+| Language   | TypeScript (strict mode, zero `any`)   |
+| Styling    | Tailwind CSS v4                        |
+| AI         | Google Gemini 2.5 Flash                |
+| Validation | Zod v4                                 |
+| Testing    | Vitest + React Testing Library + JSDOM |
+| Deployment | Vercel                                 |
 
 ---
 
@@ -293,25 +308,25 @@ For a detailed breakdown of how PitchPilot addresses the FIFA World Cup 2026 Sma
 
 ### Test Coverage by Area
 
-| Test File | Tests | What It Covers |
-|-----------|-------|---------------|
-| `contextDecisionEngine.test.ts` | 13 | Role-based, time-based, zone-based, accessibility recommendations |
-| `crowdAnalyticsEngine.test.ts` | 16 | Density calculation, bottleneck detection, occupancy totals |
-| `waitTimeEngine.test.ts` | 14 | Queue modeling, shortest queue finding, wait time levels |
-| `incidentEngine.test.ts` | 15 | Priority sorting, staff dispatch, zone-aware response |
-| `matchEngine.test.ts` | 12 | Goal/half-time recommendations, event recency, team attribution |
-| `navigationEngine.test.ts` | 10 | Dijkstra routing, accessibility, same-zone, multi-hop |
-| `emergencyEngine.test.ts` | 11 | Zone compromise, exit selection, instructions, all-zone coverage |
-| `itineraryEngine.test.ts` | 8 | Phase-specific items, unique IDs, priority validation |
-| `weatherEngine.test.ts` | 8 | Hot/cold/rain advisories, combined conditions |
-| `sentimentEngine.test.ts` | 9 | Phase factors, incident drag, goal boost, boundary clamping |
-| `mockData.test.ts` | 9 | Zod schema validation, seed determinism, cross-reference |
-| `schemas.test.ts` | 12 | Zod schema edge cases, validation, rejection |
-| `MatchTimeline.test.tsx` | 4 | Score display, minute, events, empty state |
-| `PersonalItinerary.test.tsx` | 3 | Item rendering, priority indicators, empty state |
-| `CrowdDensityCard.test.tsx` | 1 | Sorted density rendering |
-| `WaitTimeCard.test.tsx` | 1 | Wait time display |
-| **Total** | **146** | |
+| Test File                       | Tests   | What It Covers                                                    |
+| ------------------------------- | ------- | ----------------------------------------------------------------- |
+| `contextDecisionEngine.test.ts` | 13      | Role-based, time-based, zone-based, accessibility recommendations |
+| `crowdAnalyticsEngine.test.ts`  | 16      | Density calculation, bottleneck detection, occupancy totals       |
+| `waitTimeEngine.test.ts`        | 14      | Queue modeling, shortest queue finding, wait time levels          |
+| `incidentEngine.test.ts`        | 15      | Priority sorting, staff dispatch, zone-aware response             |
+| `matchEngine.test.ts`           | 12      | Goal/half-time recommendations, event recency, team attribution   |
+| `navigationEngine.test.ts`      | 10      | Dijkstra routing, accessibility, same-zone, multi-hop             |
+| `emergencyEngine.test.ts`       | 11      | Zone compromise, exit selection, instructions, all-zone coverage  |
+| `itineraryEngine.test.ts`       | 8       | Phase-specific items, unique IDs, priority validation             |
+| `weatherEngine.test.ts`         | 8       | Hot/cold/rain advisories, combined conditions                     |
+| `sentimentEngine.test.ts`       | 9       | Phase factors, incident drag, goal boost, boundary clamping       |
+| `mockData.test.ts`              | 9       | Zod schema validation, seed determinism, cross-reference          |
+| `schemas.test.ts`               | 12      | Zod schema edge cases, validation, rejection                      |
+| `MatchTimeline.test.tsx`        | 4       | Score display, minute, events, empty state                        |
+| `PersonalItinerary.test.tsx`    | 3       | Item rendering, priority indicators, empty state                  |
+| `CrowdDensityCard.test.tsx`     | 1       | Sorted density rendering                                          |
+| `WaitTimeCard.test.tsx`         | 1       | Wait time display                                                 |
+| **Total**                       | **146** |                                                                   |
 
 ### Type Safety
 
@@ -416,12 +431,10 @@ smart-stadium/
 ## Future Roadmap
 
 - 🎙️ **Voice Assistant** — hands-free navigation via Web Speech API
-- 🌍 **Multilingual AI** — Gemini responds in Spanish, French, Arabic, Hindi
 - 📱 **AR Wayfinding** — camera-based indoor navigation overlay
 - 📡 **Real IoT Integration** — replace mock data with turnstile sensors, POS systems
 - 🅿️ **Parking Integration** — lot occupancy via real-time parking sensors
 - 📊 **Historical Analytics** — post-match operational reports and trend analysis
-- ♻️ **Sustainability Engine** — travel carbon-footprint comparison with greenest-choice nudge
 - 🧑‍🤝‍🧑 **Volunteer Briefing** — role-specific shift briefings with escalation protocols
 
 ---

@@ -4,37 +4,58 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import type { StadiumApiResponse, ContextRecommendation, UserProfile } from "@/lib/types";
+import type {
+  StadiumApiResponse,
+  ContextRecommendation,
+  UserProfile,
+} from "@/lib/types";
 import { getPersonalizedRecommendations } from "@/lib/engine/contextDecisionEngine";
 
 const POLLING_INTERVAL_MS = 30_000;
 
+/**
+ * Hook to manage real-time stadium state and personalized recommendations.
+ *
+ * @param userProfile - The current user's profile containing their role, zone, and preferences
+ * @returns Object containing the raw stadium data, processed recommendations, and loading state
+ */
 export function useStadiumState(userProfile: UserProfile) {
-  const [stadiumData, setStadiumData] = useState<StadiumApiResponse | null>(null);
-  const [recommendations, setRecommendations] = useState<readonly ContextRecommendation[]>([]);
+  const [stadiumData, setStadiumData] = useState<StadiumApiResponse | null>(
+    null,
+  );
+  const [recommendations, setRecommendations] = useState<
+    readonly ContextRecommendation[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
   const isFetchingRef = useRef(false);
 
-  const fetchStadiumData = useCallback(async (signal: AbortSignal) => {
-    if (isFetchingRef.current) return;
-    isFetchingRef.current = true;
+  const fetchStadiumData = useCallback(
+    async (signal: AbortSignal) => {
+      if (isFetchingRef.current) return;
+      isFetchingRef.current = true;
 
-    try {
-      const response = await fetch("/api/stadium", { signal });
-      if (!response.ok) throw new Error(`HTTP ${String(response.status)}`);
-      const data = (await response.json()) as StadiumApiResponse;
-      setStadiumData(data);
+      try {
+        const response = await fetch("/api/stadium", { signal });
+        if (!response.ok) throw new Error(`HTTP ${String(response.status)}`);
+        const data = (await response.json()) as StadiumApiResponse;
+        setStadiumData(data);
 
-      const recs = getPersonalizedRecommendations(userProfile, data.stadiumState);
-      setRecommendations(recs);
-    } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") return;
-      console.error("Failed to fetch stadium data:", error);
-    } finally {
-      isFetchingRef.current = false;
-      setIsLoading(false);
-    }
-  }, [userProfile]);
+        const recs = getPersonalizedRecommendations(
+          userProfile,
+          data.stadiumState,
+        );
+        setRecommendations(recs);
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError")
+          return;
+        console.error("Failed to fetch stadium data:", error);
+      } finally {
+        isFetchingRef.current = false;
+        setIsLoading(false);
+      }
+    },
+    [userProfile],
+  );
 
   useEffect(() => {
     const controller = new AbortController();

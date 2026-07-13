@@ -18,7 +18,7 @@ export function hasAccessibilityNeeds(profile: UserProfile): boolean {
 
 /** Get accessibility-specific recommendations */
 export function getAccessibilityRecommendations(
-  profile: UserProfile
+  profile: UserProfile,
 ): readonly ContextRecommendation[] {
   const results: ContextRecommendation[] = [];
 
@@ -29,8 +29,8 @@ export function getAccessibilityRecommendations(
         "Accessible Routes Available",
         "Wheelchair-accessible paths and elevators are available in all zones. Use gates marked with the accessibility symbol for priority entry.",
         RECOMMENDATION_PRIORITY.HIGH,
-        "wheelchair"
-      )
+        "wheelchair",
+      ),
     );
   }
 
@@ -41,8 +41,8 @@ export function getAccessibilityRecommendations(
         "Audio Assistance Available",
         "Audio description services and tactile guides are available at the information desk near your zone.",
         RECOMMENDATION_PRIORITY.HIGH,
-        "wheelchair"
-      )
+        "wheelchair",
+      ),
     );
   }
 
@@ -53,8 +53,8 @@ export function getAccessibilityRecommendations(
         "Hearing Loop Active",
         "This stadium has hearing loop systems in all lower bowl sections. Switch your hearing aid to the T-coil setting.",
         RECOMMENDATION_PRIORITY.HIGH,
-        "wheelchair"
-      )
+        "wheelchair",
+      ),
     );
   }
 

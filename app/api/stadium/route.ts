@@ -6,14 +6,17 @@
 import { NextResponse } from "next/server";
 import { generateStadiumState } from "@/lib/data/mockStadiumData";
 import { generateIncidents } from "@/lib/data/mockIncidents";
-import { generateCrowdReport, calculateTotalOccupancy } from "@/lib/engine/crowdAnalyticsEngine";
+import {
+  generateCrowdReport,
+  calculateTotalOccupancy,
+} from "@/lib/engine/crowdAnalyticsEngine";
 import { stadiumApiResponseSchema } from "@/lib/schemas";
 import type { StadiumApiResponse } from "@/lib/types";
 import type { MatchPhase } from "@/lib/utils/constants";
 import { MATCH_PHASES } from "@/lib/utils/constants";
 
 export async function GET(
-  request: Request
+  request: Request,
 ): Promise<NextResponse<StadiumApiResponse | { error: string }>> {
   try {
     const url = new URL(request.url);
@@ -51,7 +54,7 @@ export async function GET(
       console.error("Stadium API response validation failed:", validated.error);
       return NextResponse.json(
         { error: "Internal data validation error" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -64,7 +67,7 @@ export async function GET(
     console.error("Stadium API error:", error);
     return NextResponse.json(
       { error: "Failed to fetch stadium data" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

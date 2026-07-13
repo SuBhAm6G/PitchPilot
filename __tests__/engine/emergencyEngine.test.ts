@@ -7,7 +7,12 @@ import { describe, it, expect } from "vitest";
 import { getEvacuationRoute } from "@/lib/engine/emergencyEngine";
 import type { StadiumState, Incident } from "@/lib/types";
 import { generateStadiumState } from "@/lib/data/mockStadiumData";
-import { MATCH_PHASES, ZONE_EXITS, INCIDENT_SEVERITY, INCIDENT_STATUS } from "@/lib/utils/constants";
+import {
+  MATCH_PHASES,
+  ZONE_EXITS,
+  INCIDENT_SEVERITY,
+  INCIDENT_STATUS,
+} from "@/lib/utils/constants";
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 
@@ -61,7 +66,10 @@ describe("emergencyEngine", () => {
 
   describe("getEvacuationRoute — zone compromise", () => {
     it("should detect a compromised zone and add URGENT instruction", () => {
-      const incident = createIncident({ zoneId: "north-lower", severity: INCIDENT_SEVERITY.HIGH });
+      const incident = createIncident({
+        zoneId: "north-lower",
+        severity: INCIDENT_SEVERITY.HIGH,
+      });
       const state = createStateWithIncidents([incident]);
       const route = getEvacuationRoute("north-lower", state);
       expect(route.instructions[0]).toContain("URGENT");
@@ -69,14 +77,20 @@ describe("emergencyEngine", () => {
     });
 
     it("should include the incident zone in avoidZones", () => {
-      const incident = createIncident({ zoneId: "north-lower", severity: INCIDENT_SEVERITY.CRITICAL });
+      const incident = createIncident({
+        zoneId: "north-lower",
+        severity: INCIDENT_SEVERITY.CRITICAL,
+      });
       const state = createStateWithIncidents([incident]);
       const route = getEvacuationRoute("north-lower", state);
       expect(route.avoidZones).toContain("north-lower");
     });
 
     it("should not flag zone as compromised if incident is resolved", () => {
-      const resolved = createIncident({ zoneId: "north-lower", status: INCIDENT_STATUS.RESOLVED });
+      const resolved = createIncident({
+        zoneId: "north-lower",
+        status: INCIDENT_STATUS.RESOLVED,
+      });
       const state = createStateWithIncidents([resolved]);
       const route = getEvacuationRoute("north-lower", state);
       expect(route.estimatedEvacMinutes).toBe(8);
@@ -84,7 +98,10 @@ describe("emergencyEngine", () => {
     });
 
     it("should not flag zone as compromised for low severity incidents", () => {
-      const lowSev = createIncident({ zoneId: "north-lower", severity: INCIDENT_SEVERITY.LOW });
+      const lowSev = createIncident({
+        zoneId: "north-lower",
+        severity: INCIDENT_SEVERITY.LOW,
+      });
       const state = createStateWithIncidents([lowSev]);
       const route = getEvacuationRoute("north-lower", state);
       expect(route.estimatedEvacMinutes).toBe(8);
@@ -95,13 +112,15 @@ describe("emergencyEngine", () => {
     it("should always include 'Follow staff instructions'", () => {
       const state = createStateWithIncidents([]);
       const route = getEvacuationRoute("west-lower", state);
-      expect(route.instructions.some(i => i.includes("staff"))).toBe(true);
+      expect(route.instructions.some((i) => i.includes("staff"))).toBe(true);
     });
 
     it("should always include 'Do not use elevators'", () => {
       const state = createStateWithIncidents([]);
       const route = getEvacuationRoute("vip-suites", state);
-      expect(route.instructions.some(i => i.includes("elevators"))).toBe(true);
+      expect(route.instructions.some((i) => i.includes("elevators"))).toBe(
+        true,
+      );
     });
   });
 
@@ -117,7 +136,17 @@ describe("emergencyEngine", () => {
   describe("getEvacuationRoute — all zones coverage", () => {
     it("should return a valid route for every defined zone", () => {
       const state = createStateWithIncidents([]);
-      const zones = ["north-lower", "north-upper", "south-lower", "south-upper", "east-lower", "east-upper", "west-lower", "west-upper", "vip-suites"] as const;
+      const zones = [
+        "north-lower",
+        "north-upper",
+        "south-lower",
+        "south-upper",
+        "east-lower",
+        "east-upper",
+        "west-lower",
+        "west-upper",
+        "vip-suites",
+      ] as const;
       for (const zone of zones) {
         const route = getEvacuationRoute(zone, state);
         expect(route.userZone).toBe(zone);

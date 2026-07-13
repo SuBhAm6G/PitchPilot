@@ -9,20 +9,83 @@ export const USER_ROLES = {
   STAFF: "staff",
   SECURITY: "security",
   MEDICAL: "medical",
+  ORGANIZER: "organizer",
 } as const;
 
 export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES];
 
+/** FIFA World Cup 2026 Host Stadiums */
+export const HOST_STADIUMS = [
+  { id: "metlife", name: "MetLife Stadium", city: "New York/New Jersey" },
+  { id: "azteca", name: "Estadio Azteca", city: "Mexico City" },
+  { id: "sofi", name: "SoFi Stadium", city: "Los Angeles" },
+  { id: "att", name: "AT&T Stadium", city: "Dallas" },
+  { id: "mercedes-benz", name: "Mercedes-Benz Stadium", city: "Atlanta" },
+  { id: "bmo", name: "BMO Field", city: "Toronto" },
+  { id: "bc-place", name: "BC Place", city: "Vancouver" },
+  { id: "lumen", name: "Lumen Field", city: "Seattle" },
+  { id: "levis", name: "Levi's Stadium", city: "San Francisco Bay Area" },
+  { id: "nrg", name: "NRG Stadium", city: "Houston" },
+  { id: "arrowhead", name: "Arrowhead Stadium", city: "Kansas City" },
+  { id: "gillette", name: "Gillette Stadium", city: "Boston" },
+  { id: "lincoln", name: "Lincoln Financial Field", city: "Philadelphia" },
+  { id: "hard-rock", name: "Hard Rock Stadium", city: "Miami" },
+  { id: "bbva", name: "Estadio BBVA", city: "Monterrey" },
+  { id: "akron", name: "Estadio Akron", city: "Guadalajara" },
+] as const;
+
+export type HostStadiumId = (typeof HOST_STADIUMS)[number]["id"];
+
 /** Stadium zone definitions */
 export const STADIUM_ZONES = [
-  { id: "north-lower", name: "North Lower Bowl", maxCapacity: 12_000, sector: "north" },
-  { id: "north-upper", name: "North Upper Bowl", maxCapacity: 10_000, sector: "north" },
-  { id: "south-lower", name: "South Lower Bowl", maxCapacity: 12_000, sector: "south" },
-  { id: "south-upper", name: "South Upper Bowl", maxCapacity: 10_000, sector: "south" },
-  { id: "east-lower", name: "East Lower Bowl", maxCapacity: 11_000, sector: "east" },
-  { id: "east-upper", name: "East Upper Bowl", maxCapacity: 9_500, sector: "east" },
-  { id: "west-lower", name: "West Lower Bowl", maxCapacity: 11_000, sector: "west" },
-  { id: "west-upper", name: "West Upper Bowl", maxCapacity: 9_500, sector: "west" },
+  {
+    id: "north-lower",
+    name: "North Lower Bowl",
+    maxCapacity: 12_000,
+    sector: "north",
+  },
+  {
+    id: "north-upper",
+    name: "North Upper Bowl",
+    maxCapacity: 10_000,
+    sector: "north",
+  },
+  {
+    id: "south-lower",
+    name: "South Lower Bowl",
+    maxCapacity: 12_000,
+    sector: "south",
+  },
+  {
+    id: "south-upper",
+    name: "South Upper Bowl",
+    maxCapacity: 10_000,
+    sector: "south",
+  },
+  {
+    id: "east-lower",
+    name: "East Lower Bowl",
+    maxCapacity: 11_000,
+    sector: "east",
+  },
+  {
+    id: "east-upper",
+    name: "East Upper Bowl",
+    maxCapacity: 9_500,
+    sector: "east",
+  },
+  {
+    id: "west-lower",
+    name: "West Lower Bowl",
+    maxCapacity: 11_000,
+    sector: "west",
+  },
+  {
+    id: "west-upper",
+    name: "West Upper Bowl",
+    maxCapacity: 9_500,
+    sector: "west",
+  },
   { id: "vip-suites", name: "VIP Suites", maxCapacity: 3_966, sector: "west" },
 ] as const;
 
@@ -126,7 +189,8 @@ export type RecommendationPriority =
 export const CHAT_CONFIG = {
   MAX_MESSAGE_LENGTH: 500,
   MAX_HISTORY_LENGTH: 50,
-  SYSTEM_PROMPT_ROLE: "Stadium AI Assistant for FIFA World Cup 2026 at MetLife Stadium",
+  SYSTEM_PROMPT_ROLE:
+    "Stadium AI Assistant for FIFA World Cup 2026 at MetLife Stadium",
 } as const;
 
 /** Thresholds for UI warnings */
@@ -179,8 +243,18 @@ export const ZONE_ADJACENCY: Record<string, Record<string, number>> = {
   "south-upper": { "south-lower": 80, "east-upper": 160, "west-upper": 160 },
   "east-lower": { "east-upper": 80, "north-lower": 150, "south-lower": 150 },
   "east-upper": { "east-lower": 80, "north-upper": 160, "south-upper": 160 },
-  "west-lower": { "west-upper": 80, "north-lower": 150, "south-lower": 150, "vip-suites": 60 },
-  "west-upper": { "west-lower": 80, "north-upper": 160, "south-upper": 160, "vip-suites": 70 },
+  "west-lower": {
+    "west-upper": 80,
+    "north-lower": 150,
+    "south-lower": 150,
+    "vip-suites": 60,
+  },
+  "west-upper": {
+    "west-lower": 80,
+    "north-upper": 160,
+    "south-upper": 160,
+    "vip-suites": 70,
+  },
   "vip-suites": { "west-lower": 60, "west-upper": 70 },
 } as const;
 

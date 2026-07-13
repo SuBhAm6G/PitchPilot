@@ -24,7 +24,7 @@ interface InsightsErrorResponse {
 type InsightsResponse = InsightsSuccessResponse | InsightsErrorResponse;
 
 export async function POST(
-  request: Request
+  request: Request,
 ): Promise<NextResponse<InsightsResponse>> {
   try {
     const body: unknown = await request.json();
@@ -33,7 +33,7 @@ export async function POST(
     if (!parseResult.success) {
       return NextResponse.json(
         { error: "Invalid request format." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -48,7 +48,7 @@ export async function POST(
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const prompt = `You are the AI Operations Director for a smart stadium. Based on this real-time stadium state data:
 ${JSON.stringify(stadiumState, null, 2)}
@@ -63,7 +63,8 @@ Provide a very concise, 2-sentence proactive executive brief identifying the mos
     console.error("Insights API error:", error);
     // Return a deterministic fallback instead of a 500 error so the UI remains robust
     return NextResponse.json({
-      insight: "Stadium operations are optimal. Minor congestion expected at main entry gates during the first half."
+      insight:
+        "Stadium operations are optimal. Minor congestion expected at main entry gates during the first half.",
     });
   }
 }

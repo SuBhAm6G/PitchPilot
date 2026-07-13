@@ -18,7 +18,10 @@ export default function LoadingSpinner({
   label = "Loading...",
 }: LoadingSpinnerProps) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3" role="status">
+    <div
+      className="flex flex-col items-center justify-center gap-3"
+      role="status"
+    >
       <div
         className={`animate-spin rounded-full border-slate-600 border-t-sky-400 ${SIZE_CLASSES[size]}`}
         aria-hidden="true"

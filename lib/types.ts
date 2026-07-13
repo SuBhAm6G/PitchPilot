@@ -22,6 +22,7 @@ export interface UserProfile {
   readonly name: string;
   readonly role: UserRole;
   readonly currentZone: ZoneId;
+  readonly stadiumId: string;
   readonly seatNumber?: string;
   readonly preferredLanguage: string;
   readonly accessibilityNeeds: AccessibilityNeeds;

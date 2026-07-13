@@ -5,7 +5,9 @@ interface WeatherBannerProps {
   readonly weather: WeatherAdvisory;
 }
 
-const WeatherBanner = memo(function WeatherBanner({ weather }: WeatherBannerProps) {
+const WeatherBanner = memo(function WeatherBanner({
+  weather,
+}: WeatherBannerProps) {
   if (!weather) return null;
 
   return (
@@ -15,8 +17,12 @@ const WeatherBanner = memo(function WeatherBanner({ weather }: WeatherBannerProp
       </div>
       <div className="flex-1">
         <div className="flex items-center gap-3">
-          <h3 className="font-semibold text-sky-100">{weather.temperatureCelsius}°C</h3>
-          <span className="text-sm font-medium text-sky-300 capitalize">{weather.condition}</span>
+          <h3 className="font-semibold text-sky-100">
+            {weather.temperatureCelsius}°C
+          </h3>
+          <span className="text-sm font-medium text-sky-300 capitalize">
+            {weather.condition}
+          </span>
         </div>
         <p className="mt-1 text-xs text-sky-200">{weather.advisory}</p>
         {weather.recommendedGate && (

@@ -17,7 +17,11 @@ import ShiftBriefing from "@/components/dashboard/ShiftBriefing";
 import StaffCopilot from "@/components/dashboard/StaffCopilot";
 import PredictiveCongestion from "@/components/dashboard/PredictiveCongestion";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import type { StadiumApiResponse, UserProfile, CrowdPrediction } from "@/lib/types";
+import type {
+  StadiumApiResponse,
+  UserProfile,
+  CrowdPrediction,
+} from "@/lib/types";
 
 interface OpsDashboardProps {
   readonly data: StadiumApiResponse | null;
@@ -26,12 +30,20 @@ interface OpsDashboardProps {
   readonly selectedZone?: string;
 }
 
-export default function OpsDashboard({ data, isLoading, userProfile, selectedZone }: OpsDashboardProps) {
+export default function OpsDashboard({
+  data,
+  isLoading,
+  userProfile,
+  selectedZone,
+}: OpsDashboardProps) {
   const predictions: CrowdPrediction[] = useMemo(() => {
     if (!data) return [];
     return data.crowdReport.slice(0, 4).map((report, index) => ({
       zoneId: report.zoneId,
-      predictedOccupancyPercent: Math.min(100, report.occupancyPercent + (index * 2 + 1)),
+      predictedOccupancyPercent: Math.min(
+        100,
+        report.occupancyPercent + (index * 2 + 1),
+      ),
       predictedDensityLevel: report.densityLevel,
       timeWindowMinutes: 15,
     }));
@@ -65,16 +77,22 @@ export default function OpsDashboard({ data, isLoading, userProfile, selectedZon
           </p>
         </div>
         <div className="sm:w-80">
-          <StaffCopilot incidents={data.stadiumState.incidents} staffProfile={staffLocation} />
+          <StaffCopilot
+            incidents={data.stadiumState.incidents}
+            staffProfile={staffLocation}
+          />
         </div>
       </div>
 
       <ProactiveInsightBrief stadiumState={data.stadiumState} />
-      
+
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 flex flex-col gap-6">
           <ShiftBriefing profile={userProfile} state={data.stadiumState} />
-          <GraphicalStadiumMap crowdReport={data.crowdReport} selectedZone={selectedZone} />
+          <GraphicalStadiumMap
+            crowdReport={data.crowdReport}
+            selectedZone={selectedZone}
+          />
         </div>
         <div className="col-span-1 flex flex-col gap-6">
           <StadiumOverview data={data} />

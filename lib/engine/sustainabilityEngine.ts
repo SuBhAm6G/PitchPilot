@@ -17,13 +17,15 @@ const WALK_EMISSIONS_PER_KM = 0.0;
 // Assuming average travel distance to MetLife Stadium is 25 km
 const AVERAGE_TRIP_KM = 25;
 
-export function calculateSustainability(profile: UserProfile): SustainabilityMetrics {
+export function calculateSustainability(
+  profile: UserProfile,
+): SustainabilityMetrics {
   const method = profile.travelMethod || "car";
   const groupSize = profile.groupSize || 1;
 
   // Baseline: single passenger in a car
   const baselineEmissions = CAR_EMISSIONS_PER_KM * AVERAGE_TRIP_KM;
-  
+
   let actualEmissions = 0;
   if (method === "transit") {
     actualEmissions = TRANSIT_EMISSIONS_PER_KM * AVERAGE_TRIP_KM;
@@ -36,14 +38,16 @@ export function calculateSustainability(profile: UserProfile): SustainabilityMet
 
   // Calculate savings (can't be negative in this simple model)
   const saved = Math.max(0, baselineEmissions - actualEmissions);
-  
+
   // Format to 1 decimal place
   const co2SavedKg = Math.round(saved * 10) / 10;
   const badgeEarned = co2SavedKg >= 1.0;
 
-  let message = "Consider taking public transit next time to earn your Green Fan badge!";
+  let message =
+    "Consider taking public transit next time to earn your Green Fan badge!";
   if (method === "transit") {
-    message = "Thank you for taking public transit! You've significantly reduced your carbon footprint.";
+    message =
+      "Thank you for taking public transit! You've significantly reduced your carbon footprint.";
   } else if (method === "walk") {
     message = "Zero emissions! You are a true Green Fan.";
   } else if (groupSize > 1) {

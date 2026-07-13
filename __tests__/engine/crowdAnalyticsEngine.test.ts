@@ -15,10 +15,34 @@ import type { StadiumZone } from "@/lib/types";
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 
 const MOCK_ZONES: readonly StadiumZone[] = [
-  { id: "north-lower", name: "North Lower", currentOccupancy: 3000, maxCapacity: 12000, sector: "north" },
-  { id: "south-lower", name: "South Lower", currentOccupancy: 10800, maxCapacity: 12000, sector: "south" },
-  { id: "east-lower", name: "East Lower", currentOccupancy: 11000, maxCapacity: 11000, sector: "east" },
-  { id: "west-lower", name: "West Lower", currentOccupancy: 7700, maxCapacity: 11000, sector: "west" },
+  {
+    id: "north-lower",
+    name: "North Lower",
+    currentOccupancy: 3000,
+    maxCapacity: 12000,
+    sector: "north",
+  },
+  {
+    id: "south-lower",
+    name: "South Lower",
+    currentOccupancy: 10800,
+    maxCapacity: 12000,
+    sector: "south",
+  },
+  {
+    id: "east-lower",
+    name: "East Lower",
+    currentOccupancy: 11000,
+    maxCapacity: 11000,
+    sector: "east",
+  },
+  {
+    id: "west-lower",
+    name: "West Lower",
+    currentOccupancy: 7700,
+    maxCapacity: 11000,
+    sector: "west",
+  },
 ];
 
 // ─── Tests ───────────────────────────────────────────────────────────────────
@@ -70,7 +94,13 @@ describe("identifyBottlenecks", () => {
 
   it("should return empty array when no bottlenecks", () => {
     const lowZones: readonly StadiumZone[] = [
-      { id: "north-lower", name: "North", currentOccupancy: 1000, maxCapacity: 12000, sector: "north" },
+      {
+        id: "north-lower",
+        name: "North",
+        currentOccupancy: 1000,
+        maxCapacity: 12000,
+        sector: "north",
+      },
     ];
     expect(identifyBottlenecks(lowZones).length).toBe(0);
   });
@@ -89,7 +119,9 @@ describe("calculateTotalOccupancy", () => {
 
   it("should calculate correct percentage", () => {
     const result = calculateTotalOccupancy(MOCK_ZONES);
-    const expected = Math.round(((3000 + 10800 + 11000 + 7700) / (12000 + 12000 + 11000 + 11000)) * 100);
+    const expected = Math.round(
+      ((3000 + 10800 + 11000 + 7700) / (12000 + 12000 + 11000 + 11000)) * 100,
+    );
     expect(result.occupancyPercent).toBe(expected);
   });
 

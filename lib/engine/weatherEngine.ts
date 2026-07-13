@@ -5,7 +5,7 @@ import { WEATHER_THRESHOLDS } from "@/lib/utils/constants";
  * Deterministic engine for weather-based recommendations.
  */
 export function getWeatherRecommendations(
-  weather: WeatherAdvisory
+  weather: WeatherAdvisory,
 ): readonly ContextRecommendation[] {
   const recs: ContextRecommendation[] = [];
 
@@ -16,7 +16,8 @@ export function getWeatherRecommendations(
       id: "weather-hot",
       type: "safety",
       title: "Extreme Heat Warning",
-      message: "It is very hot today. Stay hydrated and seek shade if you feel unwell. Water stations are located near all major exits.",
+      message:
+        "It is very hot today. Stay hydrated and seek shade if you feel unwell. Water stations are located near all major exits.",
       priority: 3,
       icon: "alert",
     });
@@ -25,7 +26,8 @@ export function getWeatherRecommendations(
       id: "weather-cold",
       type: "safety",
       title: "Cold Weather",
-      message: "Temperatures are low. Warm beverages are available at food courts.",
+      message:
+        "Temperatures are low. Warm beverages are available at food courts.",
       priority: 2,
       icon: "info",
     });
@@ -36,7 +38,8 @@ export function getWeatherRecommendations(
       id: "weather-rain",
       type: "general",
       title: "Rain Expected",
-      message: "Rain is expected. Umbrellas are not allowed in seating areas; ponchos are sold at merchandise stands.",
+      message:
+        "Rain is expected. Umbrellas are not allowed in seating areas; ponchos are sold at merchandise stands.",
       priority: 2,
       icon: "info",
     });

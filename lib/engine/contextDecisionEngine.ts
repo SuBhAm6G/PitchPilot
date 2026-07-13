@@ -38,7 +38,7 @@ export function makeRecommendation(
   title: string,
   message: string,
   priority: RecommendationPriority,
-  icon: RecommendationIcon
+  icon: RecommendationIcon,
 ): ContextRecommendation {
   return { id: makeId(), type, title, message, priority, icon };
 }
@@ -51,7 +51,7 @@ export function makeRecommendation(
  */
 export function getPersonalizedRecommendations(
   profile: UserProfile,
-  stadiumState: StadiumState
+  stadiumState: StadiumState,
 ): readonly ContextRecommendation[] {
   recommendationCounter = 0;
 
@@ -72,7 +72,7 @@ export function getPersonalizedRecommendations(
 
 /** Exported for testing — determine density-based zone status */
 export function getZoneDensityLevel(
-  zone: StadiumZone
+  zone: StadiumZone,
 ): "low" | "moderate" | "high" | "critical" {
   const ratio = zone.currentOccupancy / zone.maxCapacity;
   if (ratio >= CROWD_DENSITY_LEVELS.CRITICAL) return "critical";

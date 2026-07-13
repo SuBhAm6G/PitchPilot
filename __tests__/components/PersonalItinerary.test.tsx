@@ -8,9 +8,30 @@ import PersonalItinerary from "@/components/fan/PersonalItinerary";
 import type { ItineraryItem } from "@/lib/types";
 
 const mockItems: ItineraryItem[] = [
-  { id: "itin-1", time: "Now", action: "Enter Stadium", reason: "Gates are open.", priority: "now", icon: "map" },
-  { id: "itin-2", time: "Soon", action: "Grab food early", reason: "Food courts are busy.", priority: "soon", icon: "utensils" },
-  { id: "itin-3", time: "Later", action: "Find your seat", reason: "Match starts in 30 min.", priority: "later", icon: "map" },
+  {
+    id: "itin-1",
+    time: "Now",
+    action: "Enter Stadium",
+    reason: "Gates are open.",
+    priority: "now",
+    icon: "map",
+  },
+  {
+    id: "itin-2",
+    time: "Soon",
+    action: "Grab food early",
+    reason: "Food courts are busy.",
+    priority: "soon",
+    icon: "utensils",
+  },
+  {
+    id: "itin-3",
+    time: "Later",
+    action: "Find your seat",
+    reason: "Match starts in 30 min.",
+    priority: "later",
+    icon: "map",
+  },
 ];
 
 describe("PersonalItinerary", () => {

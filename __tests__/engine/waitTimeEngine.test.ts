@@ -15,11 +15,51 @@ import type { Venue } from "@/lib/types";
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 
 const MOCK_VENUES: readonly Venue[] = [
-  { id: "v1", name: "Food A", type: "food_court", zoneId: "north-lower", currentQueueLength: 10, estimatedWaitMinutes: 4, isOpen: true },
-  { id: "v2", name: "Food B", type: "food_court", zoneId: "south-lower", currentQueueLength: 25, estimatedWaitMinutes: 12, isOpen: true },
-  { id: "v3", name: "Food C", type: "food_court", zoneId: "north-lower", currentQueueLength: 30, estimatedWaitMinutes: 15, isOpen: false },
-  { id: "v4", name: "Restroom A", type: "restroom", zoneId: "north-lower", currentQueueLength: 8, estimatedWaitMinutes: 2, isOpen: true },
-  { id: "v5", name: "Restroom B", type: "restroom", zoneId: "south-lower", currentQueueLength: 20, estimatedWaitMinutes: 7, isOpen: true },
+  {
+    id: "v1",
+    name: "Food A",
+    type: "food_court",
+    zoneId: "north-lower",
+    currentQueueLength: 10,
+    estimatedWaitMinutes: 4,
+    isOpen: true,
+  },
+  {
+    id: "v2",
+    name: "Food B",
+    type: "food_court",
+    zoneId: "south-lower",
+    currentQueueLength: 25,
+    estimatedWaitMinutes: 12,
+    isOpen: true,
+  },
+  {
+    id: "v3",
+    name: "Food C",
+    type: "food_court",
+    zoneId: "north-lower",
+    currentQueueLength: 30,
+    estimatedWaitMinutes: 15,
+    isOpen: false,
+  },
+  {
+    id: "v4",
+    name: "Restroom A",
+    type: "restroom",
+    zoneId: "north-lower",
+    currentQueueLength: 8,
+    estimatedWaitMinutes: 2,
+    isOpen: true,
+  },
+  {
+    id: "v5",
+    name: "Restroom B",
+    type: "restroom",
+    zoneId: "south-lower",
+    currentQueueLength: 20,
+    estimatedWaitMinutes: 7,
+    isOpen: true,
+  },
 ];
 
 // ─── Tests ───────────────────────────────────────────────────────────────────
@@ -102,7 +142,9 @@ describe("getWaitTimesByType", () => {
     const waits = getWaitTimesByType(MOCK_VENUES, "food_court");
     expect(waits.length).toBe(2); // only open venues
     if (waits[0] && waits[1]) {
-      expect(waits[0].estimatedMinutes).toBeLessThanOrEqual(waits[1].estimatedMinutes);
+      expect(waits[0].estimatedMinutes).toBeLessThanOrEqual(
+        waits[1].estimatedMinutes,
+      );
     }
   });
 });

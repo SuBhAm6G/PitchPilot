@@ -6,13 +6,14 @@ export async function GET() {
     info: {
       title: "PitchPilot API",
       version: "1.0.0",
-      description: "API for Stadium Operations and GenAI Fan Experience"
+      description: "API for Stadium Operations and GenAI Fan Experience",
     },
     paths: {
       "/api/chat": {
         post: {
           summary: "Generate AI Assistant Response",
-          description: "Takes user context and stadium state, returns context-aware recommendations and LLM reply.",
+          description:
+            "Takes user context and stadium state, returns context-aware recommendations and LLM reply.",
           requestBody: {
             required: true,
             content: {
@@ -22,41 +23,42 @@ export async function GET() {
                   properties: {
                     message: { type: "string" },
                     userProfile: { type: "object" },
-                    stadiumState: { type: "object" }
-                  }
-                }
-              }
-            }
+                    stadiumState: { type: "object" },
+                  },
+                },
+              },
+            },
           },
           responses: {
             "200": {
-              description: "Successful response"
-            }
-          }
-        }
+              description: "Successful response",
+            },
+          },
+        },
       },
       "/api/stadium": {
         get: {
           summary: "Get Real-time Stadium State",
-          description: "Returns mocked IoT sensor data for crowd density, incidents, and wait times.",
+          description:
+            "Returns mocked IoT sensor data for crowd density, incidents, and wait times.",
           responses: {
             "200": {
-              description: "Successful response"
-            }
-          }
-        }
+              description: "Successful response",
+            },
+          },
+        },
       },
       "/api/health": {
         get: {
           summary: "System Health Check",
           responses: {
             "200": {
-              description: "System metrics and status"
-            }
-          }
-        }
-      }
-    }
+              description: "System metrics and status",
+            },
+          },
+        },
+      },
+    },
   };
 
   return NextResponse.json(openApiSpec);

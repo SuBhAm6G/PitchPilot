@@ -10,7 +10,9 @@ import { WEATHER_THRESHOLDS } from "@/lib/utils/constants";
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 
-function createWeather(overrides: Partial<WeatherAdvisory> = {}): WeatherAdvisory {
+function createWeather(
+  overrides: Partial<WeatherAdvisory> = {},
+): WeatherAdvisory {
   return {
     condition: "clear",
     temperatureCelsius: 22,
@@ -34,25 +36,31 @@ describe("weatherEngine", () => {
 
   describe("getWeatherRecommendations — hot weather", () => {
     it("should return a heat warning when temperature exceeds HOT_CELSIUS", () => {
-      const weather = createWeather({ temperatureCelsius: WEATHER_THRESHOLDS.HOT_CELSIUS + 1 });
+      const weather = createWeather({
+        temperatureCelsius: WEATHER_THRESHOLDS.HOT_CELSIUS + 1,
+      });
       const recs = getWeatherRecommendations(weather);
       expect(recs.length).toBeGreaterThanOrEqual(1);
-      expect(recs.some(r => r.title.includes("Heat"))).toBe(true);
+      expect(recs.some((r) => r.title.includes("Heat"))).toBe(true);
     });
 
     it("should include hydration advice in the heat warning message", () => {
       const weather = createWeather({ temperatureCelsius: 38 });
       const recs = getWeatherRecommendations(weather);
-      expect(recs.some(r => r.message.toLowerCase().includes("hydrat"))).toBe(true);
+      expect(recs.some((r) => r.message.toLowerCase().includes("hydrat"))).toBe(
+        true,
+      );
     });
   });
 
   describe("getWeatherRecommendations — cold weather", () => {
     it("should return a cold weather recommendation below COLD_CELSIUS", () => {
-      const weather = createWeather({ temperatureCelsius: WEATHER_THRESHOLDS.COLD_CELSIUS - 1 });
+      const weather = createWeather({
+        temperatureCelsius: WEATHER_THRESHOLDS.COLD_CELSIUS - 1,
+      });
       const recs = getWeatherRecommendations(weather);
       expect(recs.length).toBeGreaterThanOrEqual(1);
-      expect(recs.some(r => r.title.includes("Cold"))).toBe(true);
+      expect(recs.some((r) => r.title.includes("Cold"))).toBe(true);
     });
   });
 
@@ -61,20 +69,23 @@ describe("weatherEngine", () => {
       const weather = createWeather({ condition: "rain" });
       const recs = getWeatherRecommendations(weather);
       expect(recs.length).toBeGreaterThanOrEqual(1);
-      expect(recs.some(r => r.title.includes("Rain"))).toBe(true);
+      expect(recs.some((r) => r.title.includes("Rain"))).toBe(true);
     });
 
     it("should mention ponchos or umbrellas in rain message", () => {
       const weather = createWeather({ condition: "rain" });
       const recs = getWeatherRecommendations(weather);
-      const rainRec = recs.find(r => r.title.includes("Rain"));
+      const rainRec = recs.find((r) => r.title.includes("Rain"));
       expect(rainRec!.message.toLowerCase()).toMatch(/poncho|umbrella/);
     });
   });
 
   describe("getWeatherRecommendations — combined conditions", () => {
     it("should return multiple recs for hot + rain weather", () => {
-      const weather = createWeather({ condition: "rain", temperatureCelsius: 35 });
+      const weather = createWeather({
+        condition: "rain",
+        temperatureCelsius: 35,
+      });
       const recs = getWeatherRecommendations(weather);
       expect(recs.length).toBeGreaterThanOrEqual(2);
     });
@@ -82,7 +93,10 @@ describe("weatherEngine", () => {
 
   describe("getWeatherRecommendations — determinism", () => {
     it("should produce identical output for identical input", () => {
-      const weather = createWeather({ condition: "rain", temperatureCelsius: 8 });
+      const weather = createWeather({
+        condition: "rain",
+        temperatureCelsius: 8,
+      });
       const recs1 = getWeatherRecommendations(weather);
       const recs2 = getWeatherRecommendations(weather);
       expect(recs1).toEqual(recs2);

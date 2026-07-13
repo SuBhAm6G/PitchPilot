@@ -19,26 +19,46 @@ const ROLE_LABELS: Record<UserRole, string> = {
   [USER_ROLES.STAFF]: "👷 Staff Ops",
   [USER_ROLES.SECURITY]: "🛡️ Security",
   [USER_ROLES.MEDICAL]: "🏥 Medical",
+  [USER_ROLES.ORGANIZER]: "📊 Organizer",
 };
 
-const NAV_ITEMS: readonly { id: "dashboard" | "fan" | "chat"; label: string; ariaLabel: string }[] = [
-  { id: "dashboard", label: "Ops Dashboard", ariaLabel: "View operations dashboard" },
+const NAV_ITEMS: readonly {
+  id: "dashboard" | "fan" | "chat";
+  label: string;
+  ariaLabel: string;
+}[] = [
+  {
+    id: "dashboard",
+    label: "Ops Dashboard",
+    ariaLabel: "View operations dashboard",
+  },
   { id: "fan", label: "Fan Hub", ariaLabel: "View fan experience hub" },
   { id: "chat", label: "AI Assistant", ariaLabel: "Open AI chat assistant" },
 ];
 
-export default function Header({ currentRole, currentView, onViewChange }: HeaderProps) {
+export default function Header({
+  currentRole,
+  currentView,
+  onViewChange,
+}: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-900/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
         {/* Brand */}
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-sky-400 to-indigo-600 text-lg font-bold" aria-hidden="true">
+          <div
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-sky-400 to-indigo-600 text-lg font-bold"
+            aria-hidden="true"
+          >
             P
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-tight text-white">PitchPilot</h1>
-            <p className="text-xs text-slate-400">FIFA World Cup 2026 · MetLife Stadium</p>
+            <h1 className="text-lg font-bold tracking-tight text-white">
+              PitchPilot
+            </h1>
+            <p className="text-xs text-slate-400">
+              FIFA World Cup 2026 · MetLife Stadium
+            </p>
           </div>
         </div>
 
@@ -68,7 +88,9 @@ export default function Header({ currentRole, currentView, onViewChange }: Heade
         {/* Role indicator */}
         <div className="hidden sm:flex items-center gap-2 rounded-full bg-slate-800/60 px-3 py-1.5 text-sm">
           <span className="text-slate-400">Role:</span>
-          <span className="font-semibold text-sky-300">{ROLE_LABELS[currentRole]}</span>
+          <span className="font-semibold text-sky-300">
+            {ROLE_LABELS[currentRole]}
+          </span>
         </div>
       </div>
     </header>

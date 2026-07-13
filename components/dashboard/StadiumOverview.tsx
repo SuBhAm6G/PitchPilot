@@ -20,18 +20,20 @@ interface StatItem {
   readonly colorClass: string;
 }
 
-const StadiumOverview = memo(function StadiumOverview({ data }: StadiumOverviewProps) {
+const StadiumOverview = memo(function StadiumOverview({
+  data,
+}: StadiumOverviewProps) {
   const stats = useMemo<readonly StatItem[]>(() => {
     const criticalZones = data.crowdReport.filter(
-      (z) => z.densityLevel === "critical"
+      (z) => z.densityLevel === "critical",
     ).length;
 
     const highZones = data.crowdReport.filter(
-      (z) => z.densityLevel === "high"
+      (z) => z.densityLevel === "high",
     ).length;
 
     const activeIncidents = data.stadiumState.incidents.filter(
-      (inc) => inc.status !== "resolved"
+      (inc) => inc.status !== "resolved",
     ).length;
 
     return [
@@ -39,7 +41,10 @@ const StadiumOverview = memo(function StadiumOverview({ data }: StadiumOverviewP
         label: "Total Occupancy",
         value: data.totalOccupancy.toLocaleString(),
         subtext: `of ${data.totalCapacity.toLocaleString()} · ${String(data.occupancyPercent)}%`,
-        colorClass: data.occupancyPercent >= UI_WARNING_THRESHOLDS.OCCUPANCY_PERCENT ? "text-orange-400" : "text-emerald-400",
+        colorClass:
+          data.occupancyPercent >= UI_WARNING_THRESHOLDS.OCCUPANCY_PERCENT
+            ? "text-orange-400"
+            : "text-emerald-400",
       },
       {
         label: "Critical Zones",
@@ -51,7 +56,10 @@ const StadiumOverview = memo(function StadiumOverview({ data }: StadiumOverviewP
         label: "Active Incidents",
         value: String(activeIncidents),
         subtext: `of ${String(data.stadiumState.incidents.length)} total`,
-        colorClass: activeIncidents > UI_WARNING_THRESHOLDS.ACTIVE_INCIDENTS ? "text-orange-400" : "text-sky-400",
+        colorClass:
+          activeIncidents > UI_WARNING_THRESHOLDS.ACTIVE_INCIDENTS
+            ? "text-orange-400"
+            : "text-sky-400",
       },
       {
         label: "Match Phase",

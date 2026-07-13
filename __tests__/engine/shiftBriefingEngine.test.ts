@@ -7,9 +7,14 @@ const baseProfile: UserProfile = {
   id: "staff-1",
   name: "Test Staff",
   role: "staff",
+  stadiumId: "metlife",
   currentZone: "north-lower",
   preferredLanguage: "en",
-  accessibilityNeeds: { wheelchairAccess: false, visualAssistance: false, hearingAssistance: false },
+  accessibilityNeeds: {
+    wheelchairAccess: false,
+    visualAssistance: false,
+    hearingAssistance: false,
+  },
 };
 
 describe("shiftBriefingEngine", () => {

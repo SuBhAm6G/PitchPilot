@@ -41,7 +41,9 @@ export default function ZoneStatusGrid({ crowdReport }: ZoneStatusGridProps) {
           >
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="text-sm font-semibold text-white">{zone.zoneName}</h3>
+                <h3 className="text-sm font-semibold text-white">
+                  {zone.zoneName}
+                </h3>
                 <p className="mt-1 text-2xl font-bold text-white">
                   {zone.occupancyPercent}%
                 </p>
@@ -52,7 +54,8 @@ export default function ZoneStatusGrid({ crowdReport }: ZoneStatusGridProps) {
               />
             </div>
             <p className="mt-2 text-xs text-slate-400">
-              {zone.currentOccupancy.toLocaleString()} / {zone.maxCapacity.toLocaleString()} capacity
+              {zone.currentOccupancy.toLocaleString()} /{" "}
+              {zone.maxCapacity.toLocaleString()} capacity
             </p>
           </article>
         ))}
