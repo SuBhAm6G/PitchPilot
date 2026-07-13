@@ -1,10 +1,10 @@
 # 🏟️ PitchPilot — AI World Cup Companion & Stadium Operations Platform
 
-> **FIFA World Cup 2026 · MetLife Stadium · AI-Powered Fan Companion & Intelligent Operations**
+> **FIFA World Cup 2026 · 16 Host Stadiums · AI-Powered Fan Companion & Intelligent Operations**
 
-PitchPilot is a GenAI-powered platform that optimizes stadium operations and enhances the FIFA World Cup 2026 experience through intelligent, real-time, context-aware assistance. It combines **10 deterministic AI engines** with **Google Gemini 2.5 Flash** to serve fans, staff, and security teams across all match phases.
+PitchPilot is a GenAI-powered platform that optimizes stadium operations and enhances the FIFA World Cup 2026 experience through intelligent, real-time, context-aware assistance. It combines **10 deterministic AI engines** with **Google Gemini 3.1 Flash Lite** to serve fans, staff, and security teams across all match phases.
 
-[![Tests](https://img.shields.io/badge/tests-146%20passing-brightgreen)](#testing)
+[![Tests](https://img.shields.io/badge/tests-163%20passing-brightgreen)](#testing)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict%20%7C%20zero%20any-blue)](#tech-stack)
 [![Accessibility](https://img.shields.io/badge/a11y-ARIA%20compliant-purple)](#accessibility)
 [![Engines](https://img.shields.io/badge/engines-10%20pure%20functions-orange)](#deterministic-engine-architecture)
@@ -46,7 +46,7 @@ The challenge states: _"Create a GenAI-powered solution to optimize stadium oper
 
 ### "GenAI-powered solution"
 
-- **Gemini 2.5 Flash** powers the AI chat with full match, navigation, weather, and emergency context (`app/api/chat/route.ts`)
+- **Gemini 3.1 Flash Lite** powers the AI chat with full match, navigation, weather, and emergency context (`app/api/chat/route.ts`)
 - **Proactive AI Briefings** (`components/dashboard/ProactiveInsightBrief.tsx`) autonomously identify operational bottlenecks via `app/api/insights/route.ts`
 - **AI Staff Copilot** (`components/dashboard/StaffCopilot.tsx`) provides decision support with actionable recommendations
 
@@ -85,7 +85,7 @@ The challenge states: _"Create a GenAI-powered solution to optimize stadium oper
 
 ### "Clean and maintainable code"
 
-- **146+ unit tests** with Vitest — every engine, every edge case, every boundary condition
+- **163+ unit tests** with Vitest — every engine, every edge case, every boundary condition
 - **Strict TypeScript** — zero `any`, zero `eslint-disable`
 - **Zod validation** on all data boundaries (API input, LLM output, API response)
 - **< 200 lines per file** — modular, focused components and engines
@@ -154,7 +154,7 @@ This prevents malformed LLM outputs, injection attacks, and type inconsistencies
 | 🗺️ **Interactive Stadium Map** | `GraphicalStadiumMap.tsx`   | `crowdAnalyticsEngine.ts` |
 | ⚡ **AI Staff Copilot**        | `StaffCopilot.tsx`          | `incidentEngine.ts`       |
 | 📊 **Predictive Congestion**   | `PredictiveCongestion.tsx`  | `crowdAnalyticsEngine.ts` |
-| 📰 **Proactive AI Briefing**   | `ProactiveInsightBrief.tsx` | Gemini 2.5 Flash          |
+| 📰 **Proactive AI Briefing**   | `ProactiveInsightBrief.tsx` | Gemini 3.1 Flash Lite     |
 | 🏗️ **Zone Status Grid**        | `ZoneStatusGrid.tsx`        | `crowdAnalyticsEngine.ts` |
 | 📉 **Crowd Density Card**      | `CrowdDensityCard.tsx`      | `crowdAnalyticsEngine.ts` |
 | ⏱️ **Wait Time Card**          | `WaitTimeCard.tsx`          | `waitTimeEngine.ts`       |
@@ -211,7 +211,7 @@ graph TD
     end
 
     subgraph Server["Next.js API Routes"]
-        I1["/api/chat → Gemini 2.5 Flash"]
+        I1["/api/chat → Gemini 3.1 Flash Lite"]
         I2["/api/stadium → Zod validated"]
         I3["/api/insights → AI Briefing"]
     end
@@ -232,7 +232,7 @@ graph TD
 | Framework  | Next.js 16 (App Router, Turbopack)     |
 | Language   | TypeScript (strict mode, zero `any`)   |
 | Styling    | Tailwind CSS v4                        |
-| AI         | Google Gemini 2.5 Flash                |
+| AI         | Google Gemini 3.1 Flash Lite           |
 | Validation | Zod v4                                 |
 | Testing    | Vitest + React Testing Library + JSDOM |
 | Deployment | Vercel                                 |
@@ -289,7 +289,7 @@ npx vercel --prod
 
 ## Testing
 
-PitchPilot has **146+ unit and integration tests** covering every engine, component, and data boundary:
+PitchPilot has **163+ unit and integration tests** covering every engine, component, and data boundary:
 
 ```bash
 # Run all tests
@@ -324,9 +324,13 @@ For a detailed breakdown of how PitchPilot addresses the FIFA World Cup 2026 Sma
 | `schemas.test.ts`               | 12      | Zod schema edge cases, validation, rejection                      |
 | `MatchTimeline.test.tsx`        | 4       | Score display, minute, events, empty state                        |
 | `PersonalItinerary.test.tsx`    | 3       | Item rendering, priority indicators, empty state                  |
+| `accessibility.test.tsx`        | 3       | ARIA attributes, semantic landmarks, tab-indexing                 |
+| `shiftBriefingEngine.test.ts`   | 5       | Staff role responsibilities and zone-specific briefing generation |
+| `sustainabilityEngine.test.ts`  | 5       | Green travel badge logic and CO2 savings calculation              |
+| `aiService.test.ts`             | 4       | Fallback mode, empty API keys, correct engine fallback            |
 | `CrowdDensityCard.test.tsx`     | 1       | Sorted density rendering                                          |
 | `WaitTimeCard.test.tsx`         | 1       | Wait time display                                                 |
-| **Total**                       | **146** |                                                                   |
+| **Total**                       | **163** |                                                                   |
 
 ### Type Safety
 
@@ -422,7 +426,7 @@ smart-stadium/
 
 1. **IoT Sensor Data is Simulated**: Real crowd density and wait time data would come from IoT sensors, turnstile counters, and POS systems. PitchPilot uses deterministic mock data generators (`lib/data/`) that produce realistic, phase-aware values. The architecture is ready to swap in real data sources.
 
-2. **Single Venue (MetLife Stadium)**: The system is modeled on MetLife Stadium (East Rutherford, NJ) with its 88,966 capacity and 9 zones. The zone-based architecture generalizes to any stadium by updating `lib/utils/constants.ts`.
+2. **Multi-Stadium Support**: While initially modeled on MetLife Stadium, the platform now explicitly supports all 16 FIFA World Cup 2026 Host Stadiums (Azteca, SoFi, AT&T, etc.) via dynamic context injection.
 
 3. **Google Gemini API Availability**: The chat feature requires a valid `GOOGLE_GENERATIVE_AI_API_KEY`. If unavailable, PitchPilot gracefully falls back to engine-generated responses using the deterministic context engine — the app remains fully functional without the LLM.
 

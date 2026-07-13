@@ -45,9 +45,8 @@ export function useStadiumState(userProfile: UserProfile) {
           data.stadiumState,
         );
         setRecommendations(recs);
-      } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError")
-          return;
+      } catch (error: any) {
+        if (error?.name === "AbortError" || signal.aborted) return;
         console.error("Failed to fetch stadium data:", error);
       } finally {
         isFetchingRef.current = false;

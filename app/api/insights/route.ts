@@ -8,6 +8,7 @@ import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { z } from "zod/v4";
 import { stadiumStateSchema } from "@/lib/schemas";
+import { getGeminiModelName } from "@/lib/geminiConfig";
 
 const insightsRequestSchema = z.object({
   stadiumState: stadiumStateSchema,
@@ -48,7 +49,7 @@ export async function POST(
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: getGeminiModelName() });
 
     const prompt = `You are the AI Operations Director for a smart stadium. Based on this real-time stadium state data:
 ${JSON.stringify(stadiumState, null, 2)}

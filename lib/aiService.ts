@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { llmResponseSchema } from "@/lib/schemas";
 import { getPersonalizedRecommendations } from "@/lib/engine/contextDecisionEngine";
+import { getGeminiModelName } from "@/lib/geminiConfig";
 import { CHAT_CONFIG } from "@/lib/utils/constants";
 import type {
   ChatResponse,
@@ -30,7 +31,7 @@ export async function generateChatResponse(
   }
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: getGeminiModelName() });
   const systemPrompt = buildSystemPrompt(
     userProfile,
     stadiumState,

@@ -45,8 +45,8 @@ const ProactiveInsightBrief = memo(function ProactiveInsightBrief({
         if (isMounted && data.insight) {
           setInsight(data.insight);
         }
-      } catch (err) {
-        if (err instanceof DOMException && err.name === "AbortError") return;
+      } catch (err: any) {
+        if (err?.name === "AbortError") return;
         console.error("Proactive Insight Error:", err);
         if (isMounted)
           setInsight("Unable to generate AI briefing at this time.");
